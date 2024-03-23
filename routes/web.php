@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\HomeController;
+use App\Http\Controllers\Admin\ProvinceController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,5 +31,16 @@ Route::prefix("admin")->group(function () {
         Route::put("/update/{category}", "update")->name("admin.category.update");
         Route::post("/change-status/{category}", "changeStatus")->name("admin.category.changeStatus");
         Route::delete("/delete/{category}", "destroy")->name("admin.category.delete");
+    });
+
+    // provinces
+    Route::controller(ProvinceController::class)->prefix("province")->group(function () {
+        Route::get("/", "index")->name("admin.province.index");
+        Route::get("/create", "create")->name("admin.province.create");
+        Route::post("/store", "store")->name("admin.province.store");
+        Route::get("/edit/{province}", "edit")->name("admin.province.edit");
+        Route::put("/update/{province}", "update")->name("admin.province.update");
+        Route::post("/change-status/{province}", "changeStatus")->name("admin.province.changeStatus");
+        Route::delete("/delete/{province}", "destroy")->name("admin.province.delete");
     });
 });
