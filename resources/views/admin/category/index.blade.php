@@ -5,6 +5,9 @@
 @section('content')
     <section class="mb-2 d-flex justify-content-between align-items-center mt-4 mb-4">
         <h2 class="h4">دسته بندی ها</h2>
+        <form action="{{ route('admin.category.index') }}" method="GET" class="w-25 d-flex">
+            <input type="text" name="search" value="{{ request()->search }}" class="form-control" placeholder="جستجو ....">
+        </form>
         <a href="{{ route('admin.category.create') }}" class="btn btn-sm btn-success">
             ایجاد دسته بندی
         </a>
@@ -36,8 +39,10 @@
                         </th>
                         <td>{{ jalaliDate($category->created_at) }}</td>
                         <td>
-                            <a href="{{ route('admin.category.edit', $category) }}" class="btn btn-primary btn-sm">ویرایش</a>
-                            <form action="{{ route('admin.category.changeStatus', $category) }}" class="d-inline" method="POST">
+                            <a href="{{ route('admin.category.edit', $category) }}"
+                                class="btn btn-primary btn-sm">ویرایش</a>
+                            <form action="{{ route('admin.category.changeStatus', $category) }}" class="d-inline"
+                                method="POST">
                                 @csrf
                                 <button class="btn btn-warning btn-sm" type="submit">تغییر وضعیت</button>
                             </form>
@@ -52,7 +57,11 @@
                     <tr>
                         <td colspan="22">
                             <div class="alert alert-danger text-center" role="alert">
-                                دسته بندی ای ثبت نشده
+                                @if (request()->search)
+                                    موردی یافت نشد
+                                @else
+                                    دسته بندی ای ثبت نشده
+                                @endif
                             </div>
                         </td>
                     </tr>
