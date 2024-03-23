@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\ProvinceController;
 use Illuminate\Support\Facades\Route;
@@ -42,5 +43,16 @@ Route::prefix("admin")->group(function () {
         Route::put("/update/{province}", "update")->name("admin.province.update");
         Route::post("/change-status/{province}", "changeStatus")->name("admin.province.changeStatus");
         Route::delete("/delete/{province}", "destroy")->name("admin.province.delete");
+    });
+
+    // cities
+    Route::controller(CityController::class)->prefix("city")->group(function () {
+        Route::get("/", "index")->name("admin.city.index");
+        Route::get("/create", "create")->name("admin.city.create");
+        Route::post("/store", "store")->name("admin.city.store");
+        Route::get("/edit/{city}", "edit")->name("admin.city.edit");
+        Route::put("/update/{city}", "update")->name("admin.city.update");
+        Route::post("/change-status/{city}", "changeStatus")->name("admin.city.changeStatus");
+        Route::delete("/delete/{city}", "destroy")->name("admin.city.delete");
     });
 });

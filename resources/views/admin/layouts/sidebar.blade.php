@@ -8,4 +8,7 @@
     <section class="sidebar-link px-3 py-1">
         <a href="{{ route('admin.province.index') }}">استان ها</a>
     </section>
+    <section class="sidebar-link px-3 py-1">
+        <a href="{{ route('admin.city.index') }}">شهر ها</a>
+    </section>
 </section>
