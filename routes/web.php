@@ -75,5 +75,6 @@ Route::prefix("admin")->group(function () {
         Route::get("/show/{service}", "show")->name("admin.service.show");
         Route::post("/change-status/{service}", "changeStatus")->name("admin.service.changeStatus");
         Route::delete("/delete/{service}", "destroy")->name("admin.service.delete");
+        Route::get("/tags/{service}", "tags")->name("admin.service.tags");
     });
 });

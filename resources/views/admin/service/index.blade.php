@@ -16,6 +16,7 @@
                 @csrf
                 <button class="btn btn-warning btn-sm disabled" type="submit" id="changeStatusBtn">تغییر وضعیت</button>
             </form>
+            <a href="" class="btn btn-sm btn-primary disabled" id="tagsBtn">تگ ها</a>
         </section>
         <section>
             <form class="d-inline" action="" method="POST" id="deleteForm">
@@ -97,12 +98,16 @@
             let deleteUrl = "service/delete/";
             let showUrl = "service/show/";
             let changeStatusUrl = "service/change-status/";
+            let tagsUrl = "service/tags/";
 
             radioInput.change(function(e) {
                 let service_id = $(this).data("service-id");
 
                 $("#showBtn").attr("href", showUrl + service_id);
                 $("#showBtn").removeClass("disabled");
+
+                $("#tagsBtn").attr("href", tagsUrl + service_id);
+                $("#tagsBtn").removeClass("disabled");
 
                 $("#deleteForm").attr("action", deleteUrl + service_id);
                 $("#deleteBtn").removeClass("disabled");

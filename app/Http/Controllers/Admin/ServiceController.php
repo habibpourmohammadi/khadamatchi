@@ -87,10 +87,17 @@ class ServiceController extends Controller
             $service->delete();
         });
 
-        if(File::exists(public_path($image_path))){
+        if (File::exists(public_path($image_path))) {
             File::delete(public_path($image_path));
         }
 
         return back()->with("swal-success", "خدمت مورد نظر با موفقیت حذف شد");
+    }
+
+    // show service tags
+    public function tags(Service $service)
+    {
+        $tags = $service->tags;
+        return view("admin.service.tags", compact("tags"));
     }
 }
