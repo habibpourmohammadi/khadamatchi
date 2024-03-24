@@ -7,17 +7,27 @@ use App\Models\City;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\Province;
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Service extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, Sluggable;
 
     protected $table = "services";
 
     protected $guarded = ["id"];
+
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'title'
+            ]
+        ];
+    }
 
     public function user()
     {
@@ -42,5 +52,21 @@ class Service extends Model
     public function tags()
     {
         return $this->belongsToMany(Tag::class);
+    }
+
+    public function getWorkExperienceAttribute()
+    {
+        $unit = '';
+        switch ($this->work_experience_unit) {
+            case 'year':
+                $unit = "سال";
+                break;
+
+            case 'month':
+                $unit = "ماه";
+                break;
+        }
+
+        return $this->work_experience_duration . ' ' . $unit;
     }
 }

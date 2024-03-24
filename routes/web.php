@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\ProvinceController;
+use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\TagController;
 use Illuminate\Support\Facades\Route;
 
@@ -66,5 +67,13 @@ Route::prefix("admin")->group(function () {
         Route::put("/update/{tag}", "update")->name("admin.tag.update");
         Route::post("/change-status/{tag}", "changeStatus")->name("admin.tag.changeStatus");
         Route::delete("/delete/{tag}", "destroy")->name("admin.tag.delete");
+    });
+
+    // services
+    Route::controller(ServiceController::class)->prefix("service")->group(function () {
+        Route::get("/", "index")->name("admin.service.index");
+        Route::get("/show/{service}", "show")->name("admin.service.show");
+        Route::post("/change-status/{service}", "changeStatus")->name("admin.service.changeStatus");
+        Route::delete("/delete/{service}", "destroy")->name("admin.service.delete");
     });
 });
