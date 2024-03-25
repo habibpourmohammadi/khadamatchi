@@ -50,13 +50,13 @@ class UserController extends Controller
     {
         $search = request()->search;
 
-        $comments = $user->comments()->when($search, function ($query) use ($search) {
+        $comments = ServiceComment::query()->when($search, function ($query) use ($search) {
             return $query->where("comment", "like", "%$search%")->orWhereHas("user", function ($query) use ($search) {
                 $query->where("first_name", "like", "%$search%")->orWhere("last_name", "like", "%$search%")->orWhere("slug", "like", "%$search%")->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%$search%"]);
             })->orWhereHas("service", function ($query) use ($search) {
                 $query->where("title", "like", "%$search%")->orWhere("slug", "like", "%$search%");
             });
-        })->with("user", "service")->get();
+        })->with("user", "service")->where("user_id", $user->id)->get();
 
         return view("admin.user.comments", compact("comments", "user"));
     }
