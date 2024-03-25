@@ -18,6 +18,7 @@
             </form>
             <a href="" class="btn btn-sm btn-primary disabled" id="tagsBtn">تگ ها</a>
             <a href="" class="btn btn-sm btn-secondary disabled" id="commentsBtn">نظر ها</a>
+            <a href="" class="btn btn-sm btn-success disabled" id="imagesBtn">عکس ها</a>
         </section>
         <section>
             <form class="d-inline" action="" method="POST" id="deleteForm">
@@ -41,6 +42,7 @@
                     <th>عکس</th>
                     <th>تجربه کاری</th>
                     <th>تعداد نظر ها</th>
+                    <th>تعداد عکس ها</th>
                     <th>وضعیت</th>
                     <th>تاریخ ایجاد</th>
                     <th class="text-center">تنظیمات</th>
@@ -72,6 +74,7 @@
                         </th>
                         <td>{{ $service->work_experience }}</td>
                         <td>{{ $service->comments->count() }} عدد</td>
+                        <td>{{ $service->images->count() }} عدد</td>
                         <th @class([
                             'text-success' => $service->status == 'active',
                             'text-danger' => $service->status == 'deactive',
@@ -108,6 +111,7 @@
             let changeStatusUrl = "service/change-status/";
             let tagsUrl = "service/tags/";
             let commentsUrl = "service/comment/";
+            let imagesUrl = "service/image/";
 
             radioInput.change(function(e) {
                 let service_id = $(this).data("service-id");
@@ -120,6 +124,9 @@
 
                 $("#commentsBtn").attr("href", commentsUrl + service_id);
                 $("#commentsBtn").removeClass("disabled");
+
+                $("#imagesBtn").attr("href", imagesUrl + service_id);
+                $("#imagesBtn").removeClass("disabled");
 
                 $("#deleteForm").attr("action", deleteUrl + service_id);
                 $("#deleteBtn").removeClass("disabled");

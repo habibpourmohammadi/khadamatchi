@@ -7,11 +7,12 @@ use App\Models\City;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\Province;
-use Cviebrock\EloquentSluggable\Sluggable;
+use App\Models\ServiceImage;
+use App\Models\ServiceComment;
 use Illuminate\Database\Eloquent\Model;
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\ServiceComment;
 
 class Service extends Model
 {
@@ -58,6 +59,11 @@ class Service extends Model
     public function comments()
     {
         return $this->hasMany(ServiceComment::class);
+    }
+
+    public function images()
+    {
+        return $this->hasMany(ServiceImage::class);
     }
 
     public function getWorkExperienceAttribute()

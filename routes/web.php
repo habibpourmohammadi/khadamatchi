@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\ProvinceController;
 use App\Http\Controllers\Admin\Service\CommentController;
+use App\Http\Controllers\Admin\Service\ImageController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\UserController;
@@ -85,6 +86,13 @@ Route::prefix("admin")->group(function () {
             Route::get("/show/{service}/{comment}", "show")->name("admin.service.comment.show")->scopeBindings();
             Route::post("/change-status/{service}/{comment}", "changeStatus")->name("admin.service.comment.changeStatus")->scopeBindings();
             Route::delete("/delete/{service}/{comment}", "destroy")->name("admin.service.comment.delete")->scopeBindings();
+        });
+
+        // images
+        Route::controller(ImageController::class)->prefix("image")->group(function () {
+            Route::get("/{service}", "index")->name("admin.service.image.index");
+            Route::post("/change-status/{service}/{image}", "changeStatus")->name("admin.service.image.changeStatus")->scopeBindings();
+            Route::delete("/delete/{service}/{image}", "destroy")->name("admin.service.image.delete")->scopeBindings();
         });
     });
 
