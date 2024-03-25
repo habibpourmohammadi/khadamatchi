@@ -79,7 +79,7 @@
                         </th>
                         <td>{{ jalaliDate($service->created_at) }}</td>
                         <td class="text-center">
-                            <input type="radio" class="radioInput" data-service-id="{{ $service->id }}">
+                            <input type="radio" class="radioInput" name="service" data-service-id="{{ $service->id }}">
                         </td>
                     </tr>
                 @empty
