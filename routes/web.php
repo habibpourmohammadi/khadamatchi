@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\ProvinceController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\TagController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -76,5 +77,11 @@ Route::prefix("admin")->group(function () {
         Route::post("/change-status/{service}", "changeStatus")->name("admin.service.changeStatus");
         Route::delete("/delete/{service}", "destroy")->name("admin.service.delete");
         Route::get("/tags/{service}", "tags")->name("admin.service.tags");
+    });
+
+    // users
+    Route::controller(UserController::class)->prefix("user")->group(function () {
+        Route::get("/", "index")->name("admin.user.index");
+        Route::post("/change-status/{user:slug}", "changeStatus")->name("admin.user.changeStatus");
     });
 });

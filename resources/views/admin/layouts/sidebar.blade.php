@@ -17,4 +17,7 @@
     <section class="sidebar-link px-3 py-1">
         <a href="{{ route('admin.service.index') }}">خدمت ها</a>
     </section>
+    <section class="sidebar-link px-3 py-1">
+        <a href="{{ route('admin.user.index') }}">کاربران</a>
+    </section>
 </section>

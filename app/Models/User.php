@@ -4,10 +4,12 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\City;
+use App\Models\Service;
 use App\Models\Province;
-use Cviebrock\EloquentSluggable\Sluggable;
+use App\Models\ServiceComment;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -74,8 +76,35 @@ class User extends Authenticatable
         return $this->belongsTo(City::class, "city_id");
     }
 
+    public function services()
+    {
+        return $this->hasMany(Service::class);
+    }
+
     public function getFullNameAttribute()
     {
         return $this->first_name . ' ' . $this->last_name;
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(ServiceComment::class);
+    }
+
+    public function getUserGenderAttribute()
+    {
+        switch ($this->gender) {
+            case 'male':
+                return "مرد";
+                break;
+
+            case 'female':
+                return "زن";
+                break;
+
+            default:
+                return "مشخص نشده";
+                break;
+        }
     }
 }

@@ -24,6 +24,7 @@ class ServiceController extends Controller
                     $query->where(function ($query) use ($search) {
                         $query->where("first_name", "like", "%$search%")
                             ->orWhere("last_name", "like", "%$search%")
+                            ->orWhere("slug", "like", "%$search%")
                             ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%$search%"]);
                     });
                 })
