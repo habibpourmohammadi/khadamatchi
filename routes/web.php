@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\ProvinceController;
+use App\Http\Controllers\Admin\Service\CommentController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\UserController;
@@ -77,6 +78,14 @@ Route::prefix("admin")->group(function () {
         Route::post("/change-status/{service}", "changeStatus")->name("admin.service.changeStatus");
         Route::delete("/delete/{service}", "destroy")->name("admin.service.delete");
         Route::get("/tags/{service}", "tags")->name("admin.service.tags");
+
+        // comments
+        Route::controller(CommentController::class)->prefix("comment")->group(function () {
+            Route::get("/{service}", "index")->name("admin.service.comment.index");
+            Route::get("/show/{service}/{comment}", "show")->name("admin.service.comment.show")->scopeBindings();
+            Route::post("/change-status/{service}/{comment}", "changeStatus")->name("admin.service.comment.changeStatus")->scopeBindings();
+            Route::delete("/delete/{service}/{comment}", "destroy")->name("admin.service.comment.delete")->scopeBindings();
+        });
     });
 
     // users

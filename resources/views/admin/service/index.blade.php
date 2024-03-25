@@ -17,6 +17,7 @@
                 <button class="btn btn-warning btn-sm disabled" type="submit" id="changeStatusBtn">تغییر وضعیت</button>
             </form>
             <a href="" class="btn btn-sm btn-primary disabled" id="tagsBtn">تگ ها</a>
+            <a href="" class="btn btn-sm btn-secondary disabled" id="commentsBtn">نظر ها</a>
         </section>
         <section>
             <form class="d-inline" action="" method="POST" id="deleteForm">
@@ -39,6 +40,7 @@
                     <th>اسلاگ</th>
                     <th>عکس</th>
                     <th>تجربه کاری</th>
+                    <th>تعداد نظر ها</th>
                     <th>وضعیت</th>
                     <th>تاریخ ایجاد</th>
                     <th class="text-center">تنظیمات</th>
@@ -48,7 +50,12 @@
                 @forelse ($services as $service)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $service->user->full_name }}</td>
+                        <td>
+                            <a href="{{ route('admin.user.index', ['search' => $service->user->slug]) }}"
+                                class="text-decoration-none" target="_blank">
+                                {{ $service->user->full_name }}
+                            </a>
+                        </td>
                         <td>{{ $service->category->name }}</td>
                         <td>{{ $service->province->name }}</td>
                         <td>{{ $service->city->name }}</td>
@@ -64,6 +71,7 @@
                             @endif
                         </th>
                         <td>{{ $service->work_experience }}</td>
+                        <td>{{ $service->comments->count() }} عدد</td>
                         <th @class([
                             'text-success' => $service->status == 'active',
                             'text-danger' => $service->status == 'deactive',
@@ -99,6 +107,7 @@
             let showUrl = "service/show/";
             let changeStatusUrl = "service/change-status/";
             let tagsUrl = "service/tags/";
+            let commentsUrl = "service/comment/";
 
             radioInput.change(function(e) {
                 let service_id = $(this).data("service-id");
@@ -108,6 +117,9 @@
 
                 $("#tagsBtn").attr("href", tagsUrl + service_id);
                 $("#tagsBtn").removeClass("disabled");
+
+                $("#commentsBtn").attr("href", commentsUrl + service_id);
+                $("#commentsBtn").removeClass("disabled");
 
                 $("#deleteForm").attr("action", deleteUrl + service_id);
                 $("#deleteBtn").removeClass("disabled");

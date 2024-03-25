@@ -11,6 +11,7 @@ use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\ServiceComment;
 
 class Service extends Model
 {
@@ -52,6 +53,11 @@ class Service extends Model
     public function tags()
     {
         return $this->belongsToMany(Tag::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(ServiceComment::class);
     }
 
     public function getWorkExperienceAttribute()
