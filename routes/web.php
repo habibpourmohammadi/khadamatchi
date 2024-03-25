@@ -92,5 +92,6 @@ Route::prefix("admin")->group(function () {
     Route::controller(UserController::class)->prefix("user")->group(function () {
         Route::get("/", "index")->name("admin.user.index");
         Route::post("/change-status/{user:slug}", "changeStatus")->name("admin.user.changeStatus");
+        Route::get("/comments/{user:slug}", "comments")->name("admin.user.comments.show");
     });
 });

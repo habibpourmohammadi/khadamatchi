@@ -12,6 +12,7 @@
     <section class="mb-2 d-flex justify-content-between mx-3 mt-3 border-bottom pb-3">
         <section>
             <a href="" class="btn btn-sm btn-primary disabled" id="servicesBtn">خدمت ها</a>
+            <a href="" class="btn btn-sm btn-secondary disabled" id="commentsBtn">نظر ها</a>
         </section>
         <section>
             <form class="d-inline" action="" method="POST" id="changeStatusForm">
@@ -79,7 +80,7 @@
                         </td>
                         <td>{{ jalaliDate($user->created_at) }}</td>
                         <td class="text-center">
-                            <input type="radio" class="radioInput" data-user-slug="{{ $user->slug }}">
+                            <input type="radio" class="radioInput" name="user" data-user-slug="{{ $user->slug }}">
                         </td>
                     </tr>
                 @empty
@@ -105,12 +106,16 @@
             let radioInput = $(".radioInput");
             let changeStatusUrl = "user/change-status/";
             let servicesUrl = "service?search=";
+            let commentsUrl = "user/comments/";
 
             radioInput.change(function(e) {
                 let user_slug = $(this).data("user-slug");
 
                 $("#servicesBtn").attr("href", servicesUrl + user_slug);
                 $("#servicesBtn").removeClass("disabled");
+
+                $("#commentsBtn").attr("href", commentsUrl + user_slug);
+                $("#commentsBtn").removeClass("disabled");
 
                 $("#changeStatusForm").attr("action", changeStatusUrl + user_slug);
                 $("#changeStatusBtn").removeClass("disabled");

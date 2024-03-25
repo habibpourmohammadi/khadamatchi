@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\ServiceComment;
+use App\Http\Controllers\Controller;
 
 class UserController extends Controller
 {
@@ -42,5 +43,21 @@ class UserController extends Controller
 
             return back()->with("swal-success", "وضعیت کاربر مورد نظر با موفقیت به (فعال) تغییر یافت");
         }
+    }
+
+    // show user comments
+    public function comments(User $user)
+    {
+        $search = request()->search;
+
+        $comments = $user->comments()->when($search, function ($query) use ($search) {
+            return $query->where("comment", "like", "%$search%")->orWhereHas("user", function ($query) use ($search) {
+                $query->where("first_name", "like", "%$search%")->orWhere("last_name", "like", "%$search%")->orWhere("slug", "like", "%$search%")->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%$search%"]);
+            })->orWhereHas("service", function ($query) use ($search) {
+                $query->where("title", "like", "%$search%")->orWhere("slug", "like", "%$search%");
+            });
+        })->with("user", "service")->get();
+
+        return view("admin.user.comments", compact("comments", "user"));
     }
 }
