@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CityController;
+use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\ProvinceController;
 use App\Http\Controllers\Admin\Service\CommentController;
@@ -101,5 +102,16 @@ Route::prefix("admin")->group(function () {
         Route::get("/", "index")->name("admin.user.index");
         Route::post("/change-status/{user:slug}", "changeStatus")->name("admin.user.changeStatus");
         Route::get("/comments/{user:slug}", "comments")->name("admin.user.comments.show");
+    });
+
+    // faqs
+    Route::controller(FaqController::class)->prefix("faq")->group(function () {
+        Route::get("/", "index")->name("admin.faq.index");
+        Route::get("/create", "create")->name("admin.faq.create");
+        Route::post("/store", "store")->name("admin.faq.store");
+        Route::get("/edit/{faq}", "edit")->name("admin.faq.edit");
+        Route::put("/update/{faq}", "update")->name("admin.faq.update");
+        Route::post("/change-status/{faq}", "changeStatus")->name("admin.faq.changeStatus");
+        Route::delete("/delete/{faq}", "destroy")->name("admin.faq.delete");
     });
 });
