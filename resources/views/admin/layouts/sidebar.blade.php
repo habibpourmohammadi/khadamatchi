@@ -23,4 +23,7 @@
     <section class="sidebar-link px-3 py-1">
         <a href="{{ route('admin.faq.index') }}">سوالات متداول</a>
     </section>
+    <section class="sidebar-link px-3 py-1">
+        <a href="{{ route('admin.contactMessage.index') }}">ارتباط با ما</a>
+    </section>
 </section>

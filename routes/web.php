@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CityController;
+use App\Http\Controllers\Admin\ContactMessageController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\ProvinceController;
@@ -113,5 +114,13 @@ Route::prefix("admin")->group(function () {
         Route::put("/update/{faq}", "update")->name("admin.faq.update");
         Route::post("/change-status/{faq}", "changeStatus")->name("admin.faq.changeStatus");
         Route::delete("/delete/{faq}", "destroy")->name("admin.faq.delete");
+    });
+
+    // Contact messages
+    Route::controller(ContactMessageController::class)->prefix("contact-message")->group(function () {
+        Route::get("/", "index")->name("admin.contactMessage.index");
+        Route::get("/{message}", "show")->name("admin.contactMessage.show");
+        Route::post("/change-seen-status/{message}", "changeSeenStatus")->name("admin.contactMessage.changeSeenStatus");
+        Route::delete("/delete/{message}", "destroy")->name("admin.contactMessage.delete");
     });
 });
