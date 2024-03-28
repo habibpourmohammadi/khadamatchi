@@ -18,7 +18,15 @@
                     <th>عنوان</th>
                     <th>متن پیام</th>
                     <th>وضعیت دیده شدن</th>
-                    <th>تاریخ ایجاد</th>
+                    <th>
+                        @if (!isset(request()->sort) || request()->sort == 'ASC')
+                            <a href="{{ route('admin.contactMessage.index', ['search' => request()->search, 'sort' => 'DESC']) }}"
+                                class="text-decoration-none">تاریخ ایجاد <i class="fa fa-sort"></i></a>
+                        @else
+                            <a href="{{ route('admin.contactMessage.index', ['search' => request()->search, 'sort' => 'ASC']) }}"
+                                class="text-decoration-none">تاریخ ایجاد <i class="fa fa-sort"></i></a>
+                        @endif
+                    </th>
                     <th>تنظیمات</th>
                 </tr>
             </thead>
@@ -27,7 +35,8 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>
-                            <a href="{{ route('admin.user.index', ['search' => $contactMessage->user->slug]) }}" class="text-decoration-none" target="_blank">
+                            <a href="{{ route('admin.user.index', ['search' => $contactMessage->user->slug]) }}"
+                                class="text-decoration-none" target="_blank">
                                 {{ $contactMessage->user->full_name }}
                             </a>
                         </td>
@@ -40,7 +49,8 @@
                         </th>
                         <td>{{ jalaliDate($contactMessage->created_at) }}</td>
                         <td>
-                            <a href="{{ route("admin.contactMessage.show",$contactMessage) }}" class="btn btn-sm btn-info">نمایش</a>
+                            <a href="{{ route('admin.contactMessage.show', $contactMessage) }}"
+                                class="btn btn-sm btn-info">نمایش</a>
                             <form action="{{ route('admin.contactMessage.changeSeenStatus', $contactMessage) }}"
                                 class="d-inline" method="POST">
                                 @csrf

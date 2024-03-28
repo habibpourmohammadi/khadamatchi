@@ -14,12 +14,17 @@ class ContactMessageController extends Controller
     public function index()
     {
         $search = request()->search;
+        $sort = request()->sort;
+
+        if (!in_array(request()->sort, ["ASC", "DESC"])) {
+            $sort = "ASC";
+        }
 
         $contactMessages = ContactMessage::query()->when($search, function ($query) use ($search) {
             return $query->where("title", "like", "%$search%")->orWhere("message", "like", "%$search%")->orWhereHas("user", function ($query) use ($search) {
                 $query->where("first_name", "like", "%$search%")->orWhere("last_name", "like", "%$search%")->orWhere("slug", "like", "%$search%")->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%$search%"]);
             });
-        })->with("user")->get();
+        })->with("user")->orderBy("created_at", $sort)->get();
 
         return view("admin.contact-message.index", compact("contactMessages"));
     }
