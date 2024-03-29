@@ -7,6 +7,8 @@
         <h2 class="h4">سوالات متداول</h2>
         <form action="{{ route('admin.faq.index') }}" method="GET" class="w-25 d-flex">
             <input type="text" name="search" value="{{ request()->search }}" class="form-control" placeholder="جستجو ....">
+            <input type="text" name="sort" value="{{ request()->sort }}" class="d-none">
+            <button type="submit" class="d-none"></button>
         </form>
         <a href="{{ route('admin.faq.create') }}" class="btn btn-sm btn-success">
             ایجاد سوال متداول
@@ -20,7 +22,15 @@
                     <th>عنوان</th>
                     <th>جواب</th>
                     <th>وضعیت</th>
-                    <th>تاریخ ایجاد</th>
+                    <th>
+                        @if (!isset(request()->sort) || request()->sort == 'ASC')
+                            <a href="{{ route('admin.faq.index', ['search' => request()->search, 'sort' => 'DESC']) }}"
+                                class="text-decoration-none">تاریخ ایجاد <i class="fa fa-sort"></i></a>
+                        @else
+                            <a href="{{ route('admin.faq.index', ['search' => request()->search, 'sort' => 'ASC']) }}"
+                                class="text-decoration-none">تاریخ ایجاد <i class="fa fa-sort"></i></a>
+                        @endif
+                    </th>
                     <th>تنظیمات</th>
                 </tr>
             </thead>
@@ -37,10 +47,8 @@
                         </th>
                         <td>{{ jalaliDate($faq->created_at) }}</td>
                         <td>
-                            <a href="{{ route('admin.faq.edit', $faq) }}"
-                                class="btn btn-primary btn-sm">ویرایش</a>
-                            <form action="{{ route('admin.faq.changeStatus', $faq) }}" class="d-inline"
-                                method="POST">
+                            <a href="{{ route('admin.faq.edit', $faq) }}" class="btn btn-primary btn-sm">ویرایش</a>
+                            <form action="{{ route('admin.faq.changeStatus', $faq) }}" class="d-inline" method="POST">
                                 @csrf
                                 <button class="btn btn-warning btn-sm" type="submit">تغییر وضعیت</button>
                             </form>

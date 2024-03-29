@@ -15,10 +15,15 @@ class FaqController extends Controller
     public function index()
     {
         $search = request()->search;
+        $sort = request()->sort;
+
+        if (!in_array(request()->sort, ["ASC", "DESC"])) {
+            $sort = "ASC";
+        }
 
         $faqs = Faq::query()->when($search, function ($query) use ($search) {
             return $query->where("title", "like", "%$search%")->orWhere("answer", "like", "%$search%");
-        })->get();
+        })->orderBy("created_at", $sort)->get();
 
         return view("admin.faq.index", compact("faqs"));
     }
