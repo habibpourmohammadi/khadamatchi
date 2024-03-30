@@ -7,6 +7,8 @@
         <h2 class="h4">کاربران</h2>
         <form action="{{ route('admin.user.index') }}" method="GET" class="w-25 d-flex">
             <input type="text" name="search" value="{{ request()->search }}" class="form-control" placeholder="جستجو ....">
+            <input type="text" name="sort" value="{{ request()->sort }}" class="d-none">
+            <button type="submit" class="d-none"></button>
         </form>
     </section>
     <section class="mb-2 d-flex justify-content-between mx-3 mt-3 border-bottom pb-3">
@@ -38,7 +40,15 @@
                     <th>تعداد نظر ها</th>
                     <th>وضعیت</th>
                     <th>تاریخ تایید اکانت</th>
-                    <th>تاریخ ایجاد اکانت</th>
+                    <th>
+                        @if (!isset(request()->sort) || request()->sort == 'ASC')
+                            <a href="{{ route('admin.user.index', ['search' => request()->search, 'sort' => 'DESC']) }}"
+                                class="text-decoration-none">تاریخ ایجاد اکانت <i class="fa fa-sort"></i></a>
+                        @else
+                            <a href="{{ route('admin.user.index', ['search' => request()->search, 'sort' => 'ASC']) }}"
+                                class="text-decoration-none">تاریخ ایجاد اکانت <i class="fa fa-sort"></i></a>
+                        @endif
+                    </th>
                     <th class="text-center">تنظیمات</th>
                 </tr>
             </thead>

@@ -15,6 +15,11 @@ class UserController extends Controller
     public function index()
     {
         $search = request()->search;
+        $sort = request()->sort;
+
+        if (!in_array(request()->sort, ["ASC", "DESC"])) {
+            $sort = "ASC";
+        }
 
         $users = User::query()->when($search, function ($query) use ($search) {
             $query->where("first_name", "like", "%$search%")->orWhere("last_name", "like", "%$search%")->orWhere("slug", "like", "%$search%")->orWhere("mobile", "like", "%$search%")->orWhere("email", "like", "%$search%")->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%$search%"])->orWhereHas("province", function ($query) use ($search) {
@@ -22,7 +27,7 @@ class UserController extends Controller
             })->orWhereHas("city", function ($query) use ($search) {
                 $query->where("name", "like", "%$search%")->orWhere("slug", "like", "%$search%");
             });
-        })->with("province", "city", "services")->get();
+        })->with("province", "city", "services")->orderBy("created_at", $sort)->get();
 
         return view("admin.user.index", compact("users"));
     }
