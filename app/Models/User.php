@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\City;
+use App\Models\Admin;
 use App\Models\Service;
 use App\Models\Province;
 use App\Models\ServiceComment;
@@ -30,6 +31,7 @@ class User extends Authenticatable
         'profile_path',
         'mobile',
         'email',
+        'password',
         'city_id',
         'province_id',
         'gender',
@@ -89,6 +91,16 @@ class User extends Authenticatable
     public function comments()
     {
         return $this->hasMany(ServiceComment::class);
+    }
+
+    public function isAdmin()
+    {
+        return $this->admin()->exists();
+    }
+
+    public function admin()
+    {
+        return $this->hasOne(Admin::class);
     }
 
     public function getUserGenderAttribute()

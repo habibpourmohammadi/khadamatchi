@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\ContactMessageController;
@@ -24,8 +25,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Login
+Route::get("login", [LoginController::class, "loginPage"])->name("admin.login.page")->middleware("guest");
+Route::post("login", [LoginController::class, "login"])->name("admin.login")->middleware("guest");
+
 // ------------------------ Admin ------------------------
-Route::prefix("admin")->group(function () {
+Route::middleware(["admin", "auth"])->prefix("admin")->group(function () {
 
     // Home
     Route::get("/", [HomeController::class, "index"])->name("admin.index");
