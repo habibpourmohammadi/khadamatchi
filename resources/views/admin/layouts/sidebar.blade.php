@@ -21,6 +21,9 @@
         <a href="{{ route('admin.user.index') }}">کاربران</a>
     </section>
     <section class="sidebar-link px-3 py-1">
+        <a href="{{ route('admin.admin.index') }}">ادمین ها</a>
+    </section>
+    <section class="sidebar-link px-3 py-1">
         <a href="{{ route('admin.faq.index') }}">سوالات متداول</a>
     </section>
     <section class="sidebar-link px-3 py-1">

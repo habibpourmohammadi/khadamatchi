@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CityController;
@@ -108,6 +109,14 @@ Route::middleware(["admin", "auth"])->prefix("admin")->group(function () {
         Route::get("/", "index")->name("admin.user.index");
         Route::post("/change-status/{user:slug}", "changeStatus")->name("admin.user.changeStatus");
         Route::get("/comments/{user:slug}", "comments")->name("admin.user.comments.show");
+    });
+
+    // admins
+    Route::controller(AdminController::class)->prefix("admin")->group(function () {
+        Route::get("/", "index")->name("admin.admin.index");
+        Route::get("/create", "create")->name("admin.admin.create");
+        Route::post("/store", "store")->name("admin.admin.store");
+        Route::delete("/delete/{admin}/{user}", "destroy")->name("admin.admin.delete");
     });
 
     // faqs
