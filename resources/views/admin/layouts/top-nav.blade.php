@@ -4,7 +4,7 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     </button>
-    <form class="d-inline ms-3" action="" method="POST">
+    <form class="d-inline ms-3" action="{{ route('admin.logout') }}" method="POST">
         @csrf
         <button type="submit" class="btn btn-outline-warning text-white btn-sm">خروج از حساب</button>
     </form>

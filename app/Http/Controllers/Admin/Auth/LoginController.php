@@ -29,4 +29,11 @@ class LoginController extends Controller
             return back()->withInput()->withErrors(['password' => 'اطلاعات وارد شده صحیح نمی باشد']);
         }
     }
+
+    public function logout()
+    {
+        Auth::logout();
+
+        return to_route("admin.login.page");
+    }
 }

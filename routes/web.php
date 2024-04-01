@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\Route;
 // Login
 Route::get("login", [LoginController::class, "loginPage"])->name("admin.login.page")->middleware("guest");
 Route::post("login", [LoginController::class, "login"])->name("admin.login")->middleware("guest");
+Route::post("logout", [LoginController::class, "logout"])->name("admin.logout")->middleware("auth");
 
 // ------------------------ Admin ------------------------
 Route::middleware(["admin", "auth"])->prefix("admin")->group(function () {
