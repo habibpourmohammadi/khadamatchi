@@ -8,7 +8,9 @@
 
 <body dir="rtl">
     @include('home.layouts.header')
-    @yield('content')
+    <main class="container m-auto">
+        @yield('content')
+    </main>
 
     @include('home.layouts.script-tag')
     @yield('script')
