@@ -1,0 +1,8 @@
+@font-face {
+    font-family: YekanBakhMedium;
+    src: url("../fonts/YekanBakhMedium.woff");
+}
+
+body {
+    font-family: YekanBakhMedium;
+}

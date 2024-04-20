@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\Service\ImageController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Home\HomeController as HomeHomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,6 +26,12 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+// ------------------------ Home ------------------------
+Route::get("/", [HomeHomeController::class, "index"])->name("home.index");
+
+
+
 
 // Login
 Route::get("login", [LoginController::class, "loginPage"])->name("admin.login.page")->middleware("guest");
