@@ -14,9 +14,14 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // Retrieve active cities
         $cities = City::where("status", "active")->get();
+        // Retrieve categories with images
+        $categoriesHasImage = Category::where("status", "active")->where("image_path", "!=", null)->get();
+        // Retrieve all active categories
         $categories = Category::where("status", "active")->get();
 
-        return view("home.index", compact("cities", "categories"));
+        // Pass the retrieved data to the view
+        return view("home.index", compact("cities", "categories", "categoriesHasImage"));
     }
 }
