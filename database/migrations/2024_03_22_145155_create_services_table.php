@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string("title");
             $table->text("slug")->nullable();
             $table->text("description");
-            $table->text("service_image_path");
+            $table->text("service_image_path")->nullable();
             $table->integer("work_experience_duration")->nullable();
             $table->enum("work_experience_unit", ["month", "year"])->nullable();
             $table->enum("status", ["active", "deactive"])->default("deactive");

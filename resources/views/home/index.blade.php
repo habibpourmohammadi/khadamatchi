@@ -35,4 +35,14 @@
             </div>
         @endfor
     </div>
+    <div class="mt-5 md:mt-10">
+        <div class="text-center mb-8">
+            <h1 class="text-lg md:text-2xl">
+                <span class="border-b border-red-500">
+                    میخواهید به جمع متخصصین خدمات چی بپیوندید ؟
+                </span>
+            </h1>
+        </div>
+        <livewire:register-expertise>
+    </div>
 @endsection
