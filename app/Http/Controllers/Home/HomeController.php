@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Home;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Models\City;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -12,6 +14,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view("home.index");
+        $cities = City::where("status", "active")->get();
+        $categories = Category::where("status", "active")->get();
+
+        return view("home.index", compact("cities", "categories"));
     }
 }
