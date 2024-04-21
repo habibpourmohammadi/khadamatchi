@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string("name");
             $table->text("slug")->nullable();
             $table->text("description");
+            $table->text("image_path")->nullable();
             $table->enum("status", ["active", "deactive"])->default("active");
             $table->timestamps();
             $table->softDeletes();

@@ -24,6 +24,7 @@ class StoreRequest extends FormRequest
         return [
             "name" => ["required", "unique:categories,name", "max:255"],
             "description" => ["required"],
+            "image_path" => ["nullable", "image", "mimes:png,jpg,jpeg", "max:1024"],
         ];
     }
 
@@ -32,6 +33,7 @@ class StoreRequest extends FormRequest
         return [
             "name" => "نام دسته بندی",
             "description" => "توضیحات دسته بندی",
+            "image_path" => "عکس دسته بندی",
         ];
     }
 }

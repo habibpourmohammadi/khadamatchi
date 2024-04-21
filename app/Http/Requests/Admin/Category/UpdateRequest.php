@@ -24,6 +24,7 @@ class UpdateRequest extends FormRequest
         return [
             "name" => ["required", "unique:categories,name," . $this->category->id, "max:255"],
             "description" => ["required"],
+            "image_path" => ["nullable", "image", "mimes:png,jpg,jpeg", "max:1024"],
         ];
     }
 
@@ -32,6 +33,7 @@ class UpdateRequest extends FormRequest
         return [
             "name" => "نام دسته بندی",
             "description" => "توضیحات دسته بندی",
+            "image_path" => "عکس دسته بندی",
         ];
     }
 }

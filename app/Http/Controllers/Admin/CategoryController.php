@@ -6,11 +6,15 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
+use Intervention\Image\Facades\Image;
 use App\Http\Requests\Admin\Category\StoreRequest;
 use App\Http\Requests\Admin\Category\UpdateRequest;
 
 class CategoryController extends Controller
 {
+
+    private $path = 'images' . DIRECTORY_SEPARATOR . "category" . DIRECTORY_SEPARATOR;
     /**
      * Display a listing of the resource.
      */
@@ -40,8 +44,19 @@ class CategoryController extends Controller
      */
     public function store(StoreRequest $request)
     {
+        $image_path = null;
+
+        if ($request->hasFile("image_path")) {
+            $image = $request->file("image_path");
+            $imageName = time() . '.' . $image->extension();
+            $imagePath = public_path($this->path . $imageName);
+            Image::make($image->getRealPath())->save($imagePath);
+            $image_path = $this->path . $imageName;
+        }
+
         Category::create([
             "name" => $request->name,
+            "image_path" => $image_path,
             "description" => $request->description,
         ]);
 
@@ -61,8 +76,23 @@ class CategoryController extends Controller
      */
     public function update(UpdateRequest $request, Category $category)
     {
+        $image_path = $category->image_path;
+
+        if ($request->hasFile("image_path")) {
+            if (File::exists(public_path($category->image_path))) {
+                File::delete(public_path($category->image_path));
+            }
+
+            $image = $request->file("image_path");
+            $imageName = time() . '.' . $image->extension();
+            $imagePath = public_path($this->path . $imageName);
+            Image::make($image->getRealPath())->save($imagePath);
+            $image_path = $this->path . $imageName;
+        }
+
         $category->update([
             "name" => $request->name,
+            "image_path" => $image_path,
             "description" => $request->description,
         ]);
 
@@ -92,11 +122,17 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         DB::transaction(function () use ($category) {
+            $image_path = $category->image_path;
+
             $category->update([
                 "name" => $category->name . ' ' . time(),
             ]);
 
             $category->delete();
+
+            if (File::exists(public_path($image_path))) {
+                File::delete(public_path($image_path));
+            }
         });
 
         return back()->with("swal-success", "دسته بندی مورد نظر با موفقیت حذف شد");

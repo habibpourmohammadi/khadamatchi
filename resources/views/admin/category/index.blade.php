@@ -20,6 +20,7 @@
                     <th>نام</th>
                     <th>اسلاگ</th>
                     <th>توضیحات</th>
+                    <th>عکس</th>
                     <th>وضعیت</th>
                     <th>تاریخ ایجاد</th>
                     <th>تنظیمات</th>
@@ -32,6 +33,15 @@
                         <td>{{ $category->name }}</td>
                         <td>{{ $category->slug ?? '-' }}</td>
                         <td>{{ Str::limit($category->description, 35, '...') }}</td>
+                        <td>
+                            @if ($category->image_path != null && \File::exists(public_path($category->image_path)))
+                                <a href="{{ asset($category->image_path) }}" target="_blank">
+                                    <img src="{{ asset($category->image_path) }}" alt="" width="30">
+                                </a>
+                            @else
+                                <small class="text-danger fw-bold">عکس ثبت نشده</small>
+                            @endif
+                        </td>
                         <th @class([
                             'text-success' => $category->status == 'active',
                             'text-danger' => $category->status == 'deactive',
