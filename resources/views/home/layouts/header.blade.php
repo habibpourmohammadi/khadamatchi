@@ -10,11 +10,11 @@
                     class="flex text-sm rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
                     id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
                     data-dropdown-placement="bottom">
-                    <span class="sr-only">Open user menu</span>
+                    <span class="sr-only"></span>
                     @if (auth()->user()->profile_path)
                         <img class="w-8 h-8 rounded-full" src="{{ asset(auth()->user()->profile_path) }}" alt="user photo">
                     @else
-                    <i class="fa fa-user"></i>
+                        <i class="fa fa-user"></i>
                     @endif
                 </button>
                 <div class="z-50 hidden my-4 text-base list-none bg-gray-100 divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
@@ -90,12 +90,14 @@
                     <div id="dropdownNavbar"
                         class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                         <ul class="py-2 text-sm text-gray-700 dark:text-gray-400" aria-labelledby="dropdownLargeButton">
-                            <li>
-                                <a href="#"
-                                    class="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600 dark:hover:text-white">
-                                    تعمیرات لوازم خانگی
-                                </a>
-                            </li>
+                            @foreach ($categories as $category)
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600 dark:hover:text-white">
+                                        {{ $category->name }}
+                                    </a>
+                                </li>
+                            @endforeach
                         </ul>
                     </div>
                 </li>
