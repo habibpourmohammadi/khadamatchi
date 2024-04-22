@@ -8,6 +8,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="icon" type="image/x-icon" href="{{ asset('home-assets/icon/logo-red.png') }}">
     <link rel="stylesheet" href="{{ asset('home-assets/css/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin-assets/sweetalert/css/sweetalert2.css') }}">
     <title>خدمات چی | ورود به حساب کاربری</title>
 </head>
 
@@ -21,7 +22,8 @@
                     </span>
                 </h1>
             </div>
-            <form action="{{ route('home.login') }}" method="POST" class="max-w-sm mx-auto bg-gray-50 shadow-md px-3 py-5 rounded-lg">
+            <form action="{{ route('home.login') }}" method="POST"
+                class="max-w-sm mx-auto bg-gray-50 shadow-md px-3 py-5 rounded-lg">
                 @csrf
                 <div class="mb-5">
                     <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -48,7 +50,8 @@
                 <div class="flex items-start mb-5">
                     <span class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                         حساب کاربری ندارید؟
-                        <a href="" class="text-decoration-none text-blue-700 font-bold hover:underline">
+                        <a href="{{ route('home.register.page') }}"
+                            class="text-decoration-none text-blue-700 font-bold hover:underline">
                             ثبت نام در وبسایت
                         </a>
                     </span>
@@ -60,6 +63,10 @@
             </form>
         </div>
     </main>
+    <script src="{{ asset('admin-assets/js/jquery-3.7.1.min.js') }}"></script>
+    <script src="{{ asset('admin-assets/sweetalert/js/sweetalert2.all.min.js') }}"></script>
+    <script src="{{ asset('admin-assets/sweetalert/js/sweetalert2.min.js') }}"></script>
+    @include('home.alert.sweetalert.success')
 </body>
 
 </html>

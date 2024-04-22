@@ -34,6 +34,8 @@ Route::get("/", [HomeHomeController::class, "index"])->name("home.index");
 // Auth
 Route::get("login", [AuthController::class, "loginPage"])->name("home.login.page")->middleware("guest");
 Route::post("login", [AuthController::class, "login"])->name("home.login")->middleware("guest");
+Route::get("register", [AuthController::class, "registerPage"])->name("home.register.page")->middleware("guest");
+Route::post("register", [AuthController::class, "register"])->name("home.register")->middleware("guest");
 Route::post("logout", [AuthController::class, "logout"])->name("home.logout")->middleware("auth");
 Route::get("logout", [AuthController::class, "logout"])->middleware("auth");
 

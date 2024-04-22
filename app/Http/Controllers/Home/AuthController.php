@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers\Home;
 
+use App\Models\City;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -45,6 +49,46 @@ class AuthController extends Controller
             // If authentication fails, redirect back with input and error message
             return back()->withInput()->withErrors(['password' => 'اطلاعات وارد شده صحیح نمی باشد']);
         }
+    }
+
+    /**
+     * Display the registration page.
+     */
+    public function registerPage()
+    {
+        // Retrieve active cities
+        $cities = City::where("status", "active")->get();
+        // Return the registration view with cities
+        return view("auth.register", compact("cities"));
+    }
+
+    /**
+     * Process the registration request.
+     */
+    public function register(RegisterRequest $request)
+    {
+        // Find the city based on the provided slug
+        $city = City::where("slug", $request->city)->where("status", "active")->first();
+
+        // If the city is not found, return with error message
+        if (!isset($city)) {
+            return back()->withInput()->withErrors(['city' => 'شهر انتخاب شده صحیح نمی باشد']);
+        }
+
+        // Create a new user with the provided information
+        User::create([
+            "first_name" => $request->first_name,
+            "last_name" => $request->last_name,
+            "mobile" => $request->mobile,
+            "email" => $request->email,
+            "password" => Hash::make($request->password),
+            "city_id" => $city->id,
+            "province_id" => $city->province_id,
+            "gender" => "none",
+        ]);
+
+        // Redirect to the login page with a success message
+        return to_route("home.login.page")->with("swal-success", "حساب کاربری شما ایجاد شد، وارد حساب کاربری خود شوید");
     }
 
     /**
