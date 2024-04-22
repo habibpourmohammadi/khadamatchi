@@ -13,6 +13,8 @@
     </main>
     @include('home.layouts.footer')
     @include('home.layouts.script-tag')
+    @include('home.alert.sweetalert.success')
+    @include('home.alert.sweetalert.error')
     @yield('script')
 </body>
 

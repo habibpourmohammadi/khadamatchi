@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\ContactMessageController;
@@ -13,6 +12,7 @@ use App\Http\Controllers\Admin\Service\ImageController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Home\AuthController;
 use App\Http\Controllers\Home\HomeController as HomeHomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,12 +31,11 @@ use Illuminate\Support\Facades\Route;
 Route::get("/", [HomeHomeController::class, "index"])->name("home.index");
 
 
-
-
-// Login
-Route::get("login", [LoginController::class, "loginPage"])->name("admin.login.page")->middleware("guest");
-Route::post("login", [LoginController::class, "login"])->name("admin.login")->middleware("guest");
-Route::post("logout", [LoginController::class, "logout"])->name("admin.logout")->middleware("auth");
+// Auth
+Route::get("login", [AuthController::class, "loginPage"])->name("home.login.page")->middleware("guest");
+Route::post("login", [AuthController::class, "login"])->name("home.login")->middleware("guest");
+Route::post("logout", [AuthController::class, "logout"])->name("home.logout")->middleware("auth");
+Route::get("logout", [AuthController::class, "logout"])->middleware("auth");
 
 // ------------------------ Admin ------------------------
 Route::middleware(["admin", "auth"])->prefix("admin")->group(function () {

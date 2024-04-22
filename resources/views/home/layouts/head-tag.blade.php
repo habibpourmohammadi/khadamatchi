@@ -4,4 +4,5 @@
 <link rel="icon" type="image/x-icon" href="{{ asset('home-assets/icon/logo-red.png') }}">
 <link rel="stylesheet" href="{{ asset('home-assets/css/main.css') }}">
 <link rel="stylesheet" href="{{ asset('home-assets/fontawesome/css/all.min.css') }}">
+<link rel="stylesheet" href="{{ asset('admin-assets/sweetalert/css/sweetalert2.css') }}">
 @vite(['resources/css/app.css', 'resources/js/app.js'])

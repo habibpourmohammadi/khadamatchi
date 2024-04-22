@@ -25,6 +25,14 @@
                             class="block  text-gray-500 truncate dark:text-gray-400 font-sans text-sm"><small>{{ auth()->user()->email }}</small></span>
                     </div>
                     <ul class="py-2" aria-labelledby="user-menu-button">
+                        @if (auth()->user()->isAdmin())
+                            <li>
+                                <a href="{{ route('admin.index') }}" target="_blank"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                                    پنل ادمین
+                                </a>
+                            </li>
+                        @endif
                         <li>
                             <a href="#"
                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
@@ -32,10 +40,14 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
-                                خروج از حساب کاربری
-                            </a>
+                            <form action="{{ route('home.logout') }}" method="POST" class="inline">
+                                @csrf
+                                <button type="submit"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                                    خروج از حساب کاربری
+
+                                </button>
+                            </form>
                         </li>
                     </ul>
                 </div>
@@ -52,7 +64,7 @@
                     id="user-dropdown">
                     <ul class="py-2" aria-labelledby="user-menu-button">
                         <li>
-                            <a href="#"
+                            <a href="{{ route('home.login') }}"
                                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
                                 <span class="me-1">ورود</span> | <span class="ms-1">ثبت نام</span>
                             </a>
