@@ -121,11 +121,19 @@ class RegisterExpertise extends Component
      */
     public function validateValues()
     {
+        // Check if the user is not authenticated, redirect to the login page
+        if (!Auth::check()) {
+            return to_route("home.login.page");
+        }
+        // Check if the user's email is not verified, redirect to the user's profile page with an error message
+        elseif (Auth::user()->account_verified_at == null) {
+            return to_route("home.my-profile.page")->with("swal-error", "لطفا ابتدا ایمیل خود را تایید کنید !");
+        }
+
         $this->validate();
+
         if (Auth::check()) {
             $this->register();
-        } else {
-            session()->flash("error-alert", "لطفا ابتدا وارد حساب کاربری خود شوید !");
         }
     }
 
@@ -136,6 +144,15 @@ class RegisterExpertise extends Component
      */
     private function register()
     {
+        // Check if the user is not authenticated, redirect to the login page
+        if (!Auth::check()) {
+            return to_route("home.login.page");
+        }
+        // Check if the user's email is not verified, redirect to the user's profile page with an error message
+        elseif (Auth::user()->account_verified_at == null) {
+            return to_route("home.my-profile.page")->with("swal-error", "لطفا ابتدا ایمیل خود را تایید کنید !");
+        }
+
         $user_id = Auth::user()->id;
         $category = Category::where("slug", $this->category)->where("status", "active")->first();
         $province = Province::where("slug", $this->province)->where("status", "active")->first();
