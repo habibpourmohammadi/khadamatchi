@@ -58,7 +58,7 @@
                                 {{ $service->user->full_name }}
                             </a>
                         </td>
-                        <td>{{ $service->category->name }}</td>
+                        <td @class(['text-danger' => $service->category == null])>{{ $service->category->name ?? 'حذف شده' }}</td>
                         <td>{{ $service->province->name }}</td>
                         <td>{{ $service->city->name }}</td>
                         <td>{{ Str::limit($service->title, 35, '...') }}</td>

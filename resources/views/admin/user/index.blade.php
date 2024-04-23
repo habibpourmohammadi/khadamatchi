@@ -68,10 +68,10 @@
                         <th>
                             @if (isset($user->profile_path) && \File::exists(public_path($user->profile_path)))
                                 <a href="{{ asset($user->profile_path) }}" target="_blank">
-                                    <img src="{{ asset($user->profile_path) }}" alt="پروفایل پیدا نشد">
+                                    <img src="{{ asset($user->profile_path) }}" alt="پروفایل پیدا نشد" width="30">
                                 </a>
                             @else
-                                <span class="text-danger">پروفایل پیدا نشد</span>
+                                <span class="text-danger"><small>پیدا نشد</small></span>
                             @endif
                         </th>
                         <td>{{ $user->user_gender }}</td>
