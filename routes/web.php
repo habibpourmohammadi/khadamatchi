@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Home\AuthController;
 use App\Http\Controllers\Home\HomeController as HomeHomeController;
+use App\Http\Controllers\Home\MyProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,6 +39,12 @@ Route::get("register", [AuthController::class, "registerPage"])->name("home.regi
 Route::post("register", [AuthController::class, "register"])->name("home.register")->middleware("guest");
 Route::post("logout", [AuthController::class, "logout"])->name("home.logout")->middleware("auth");
 Route::get("logout", [AuthController::class, "logout"])->middleware("auth");
+
+// my profile
+Route::middleware("auth")->controller(MyProfileController::class)->prefix("my-profile")->group(function () {
+    Route::get("/", "myProfilePage")->name("home.my-profile.page");
+    Route::post("/", "myProfileUpdate")->name("home.my-profile.update");
+});
 
 // ------------------------ Admin ------------------------
 Route::middleware(["admin", "auth"])->prefix("admin")->group(function () {
