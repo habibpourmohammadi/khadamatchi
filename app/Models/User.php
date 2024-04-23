@@ -37,6 +37,7 @@ class User extends Authenticatable
         'gender',
         'status',
         'account_verified_at',
+        'token',
     ];
 
     /**

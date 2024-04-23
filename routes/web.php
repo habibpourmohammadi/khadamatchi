@@ -44,6 +44,8 @@ Route::get("logout", [AuthController::class, "logout"])->middleware("auth");
 Route::middleware("auth")->controller(MyProfileController::class)->prefix("my-profile")->group(function () {
     Route::get("/", "myProfilePage")->name("home.my-profile.page");
     Route::post("/", "myProfileUpdate")->name("home.my-profile.update");
+    Route::post("/send-verify-token", "sendVerifyToken")->name("home.my-profile.send-verify-token");
+    Route::get("/verify-email/{user:token}", "verifyEmail")->name("home.my-profile.verify-email");
 });
 
 // ------------------------ Admin ------------------------

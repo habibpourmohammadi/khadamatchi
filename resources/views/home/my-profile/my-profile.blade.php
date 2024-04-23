@@ -66,10 +66,10 @@
                 </div>
                 @if (auth()->user()->account_verified_at == null)
                     <div class="col-span-4 sm:col-span-3 mt-1 pt-9 text-left">
-                        <a href=""
+                        <button id="sendVerifyToken" type="button"
                             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-2 sm:px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                             تایید ایمیل
-                        </a>
+                        </button>
                     </div>
                 @endif
                 <div class="col-span-6 mt-1">
@@ -108,4 +108,14 @@
             </form>
         </div>
     </div>
+    <form action="{{ route('home.my-profile.send-verify-token') }}" method="POST" class="hidden" id="formSendVerifyToken">
+        @csrf
+    </form>
+@endsection
+@section('script')
+    <script>
+        $("#sendVerifyToken").click(function() {
+            $("#formSendVerifyToken").submit();
+        });
+    </script>
 @endsection

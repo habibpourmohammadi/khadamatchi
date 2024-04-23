@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Home;
 
 use App\Models\City;
+use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
+use App\Http\Services\Message\MessageService;
+use App\Http\Services\Message\Email\EmailService;
 use App\Http\Requests\Home\MyProfile\UpdateRequest;
 
 class MyProfileController extends Controller
@@ -80,5 +84,72 @@ class MyProfileController extends Controller
 
         // Redirect back with a success message
         return back()->with("swal-success", "اطلاعات حساب شما با موفقیت ویرایش شد");
+    }
+
+    /**
+     * Send verification token to the user's email for account activation.
+     */
+    public function sendVerifyToken()
+    {
+        // Retrieve the authenticated user
+        $user = Auth::user();
+
+        // If the user's account is already verified, return with an error message
+        if (isset($user->account_verified_at)) {
+            return back()->with("swal-error", "لطفا دوباره تلاش کنید !");
+        }
+
+        // Generate a random verification token
+        $token = Str::random(125);;
+
+        try {
+            // Update the user's token with the generated one
+            $user->update([
+                "token" => $token,
+            ]);
+
+            // Create an email service instance
+            $emailService = new EmailService();
+            $details = [
+                'title' => 'ایمیل فعال سازی حساب کاربری',
+                'body' => "برای فعال سازی حساب اینجا کلیک کنید",
+                'url' => route("home.my-profile.verify-email", $token),
+            ];
+
+            // Set email details
+            $emailService->setDetails($details);
+            $emailService->setFrom("noreplay@example.com", "khadamatchi");
+            $emailService->setSubject("ایمیل فعال سازی");
+            $emailService->setTo($user->email);
+
+            // Create a message service instance and send the email
+            $messageService = new MessageService($emailService);
+            $messageService->send();
+
+            return back()->with("swal-success", "ایمیل فعال سازی برای شما ارسال شد ، لیست ایمیل های ارسال شده خود را چک کنید");
+        } catch (\Throwable $th) {
+            return back()->with("swal-error", "لطفا دوباره تلاش کنید !");
+        }
+    }
+
+    /**
+     * Verify the user's email using the provided token.
+     */
+    public function verifyEmail(User $user)
+    {
+        // If the user's account is already verified, reset the token
+        if (isset($user->account_verified_at)) {
+            $user->update([
+                "token" => null
+            ]);
+        }
+
+        // Update the user's account_verified_at field to mark the email as verified and reset the token
+        $user->update([
+            "account_verified_at" => now(),
+            "token" => null,
+        ]);
+
+        return to_route("home.my-profile.page")->with("swal-success", "ایمیل شما با موفقیت تایید شد");
     }
 }

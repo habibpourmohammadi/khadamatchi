@@ -19,7 +19,7 @@
                     </span>
                 </div>
                 <div style="text-align: center; margin-top: 1.25rem;">
-                    {{ $details['body'] }}
+                    <a href="{{ $details['url'] ?? '' }}">{{ $details['body'] }}</a>
                 </div>
                 <div style="text-align: center; margin-top: 1.25rem;">
                     تمام حقوق برای تیم <span style="color: #2563EB; font-weight: 700;">خدمات چی</span> محفوظ است
