@@ -48,6 +48,9 @@ Route::middleware("auth")->controller(MyProfileController::class)->prefix("my-pr
     Route::get("/verify-email/{user:token}", "verifyEmail")->name("home.my-profile.verify-email");
 });
 
+// contact us
+Route::get("/contact-us", [HomeHomeController::class, "contactUsPage"])->name("home.contact-us.page")->middleware("auth");
+
 // ------------------------ Admin ------------------------
 Route::middleware(["admin", "auth"])->prefix("admin")->group(function () {
 

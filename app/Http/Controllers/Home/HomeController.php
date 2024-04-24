@@ -24,4 +24,12 @@ class HomeController extends Controller
         // Pass the retrieved data to the view
         return view("home.index", compact("cities", "categories", "categoriesHasImage"));
     }
+
+    /**
+     * Display the contact us page.
+     */
+    public function contactUsPage()
+    {
+        return view("home.contact-us");
+    }
 }

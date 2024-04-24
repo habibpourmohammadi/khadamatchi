@@ -10,7 +10,7 @@
                     <a href="{{ route("home.index") }}" class="hover:underline me-4 md:me-6">خانه</a>
                 </li>
                 <li>
-                    <a href="#" class="hover:underline me-4 md:me-6">ارتباط با ما</a>
+                    <a href="{{ route("home.contact-us.page") }}" class="hover:underline me-4 md:me-6">ارتباط با ما</a>
                 </li>
                 <li>
                     <a href="#" class="hover:underline me-4 md:me-6">سوالات متداول</a>
