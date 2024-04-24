@@ -5,7 +5,7 @@
 @section('content')
     <div class="flex flex-col w-full md:flex-row mt-4 px-3 pb-20 md:py-28">
         @include('home.my-profile.sidebar')
-        <div class="md:w-4/6 bg-gray-50 mt-5 md:mt-0 md:ms-3 shadow-lg py-2 px-2 md:py-5 md:px-5 rounded-lg">
+        <div class="md:w-4/6 xl:w-5/6 bg-gray-50 mt-5 md:mt-0 md:ms-3 shadow-lg py-2 px-2 md:py-5 md:px-5 rounded-lg">
             <form action="{{ route('home.my-profile.update') }}" method="POST" class="grid grid-cols-12 gap-2"
                 enctype="multipart/form-data">
                 @csrf

@@ -1,4 +1,4 @@
-<div class="bg-gray-50 shadow-lg md:w-2/6 rounded-lg">
+<div class="bg-gray-50 shadow-lg md:w-2/6 xl:w-1/6 rounded-lg">
     <a href="{{ route('home.my-profile.page') }}"
         class="my-4 block hover:bg-gray-200 rounded-lg py-2 px-2 mx-1 hover:cursor-pointer hover:text-blue-700 transition-all">
         <span>حساب کاربری من</span>
