@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Home;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\City;
+use App\Models\Faq;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -31,5 +32,17 @@ class HomeController extends Controller
     public function contactUsPage()
     {
         return view("home.contact-us");
+    }
+
+    /**
+     * Display the frequently asked questions (FAQ) page.
+     */
+    public function faqPage()
+    {
+        // Retrieve active FAQs
+        $faqs = Faq::where("status", "active")->get();
+
+        // Return the view with the fetched FAQs
+        return view("home.faq", compact("faqs"));
     }
 }

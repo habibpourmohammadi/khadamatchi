@@ -51,6 +51,9 @@ Route::middleware("auth")->controller(MyProfileController::class)->prefix("my-pr
 // contact us
 Route::get("/contact-us", [HomeHomeController::class, "contactUsPage"])->name("home.contact-us.page")->middleware("auth");
 
+// frequently asked questions (FAQ)
+Route::get("/faq", [HomeHomeController::class, "faqPage"])->name("home.faqPage.page");
+
 // ------------------------ Admin ------------------------
 Route::middleware(["admin", "auth"])->prefix("admin")->group(function () {
 

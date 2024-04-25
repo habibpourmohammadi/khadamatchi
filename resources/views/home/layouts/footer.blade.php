@@ -13,7 +13,7 @@
                     <a href="{{ route("home.contact-us.page") }}" class="hover:underline me-4 md:me-6">ارتباط با ما</a>
                 </li>
                 <li>
-                    <a href="#" class="hover:underline me-4 md:me-6">سوالات متداول</a>
+                    <a href="{{ route("home.faqPage.page") }}" class="hover:underline me-4 md:me-6">سوالات متداول</a>
                 </li>
                 <li>
                     <a href="#" class="hover:underline">
