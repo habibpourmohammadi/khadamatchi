@@ -22,7 +22,9 @@ class CommentController extends Controller
             })->orWhereHas("service", function ($query) use ($search) {
                 $query->where("title", "like", "%$search%")->orWhere("slug", "like", "%$search%");
             });
-        })->with("user", "service")->where("service_id", $service->id)->get();
+        })->with("user", "service")->get();
+
+        $comments = $comments->where("service_id", $service->id);
 
         return view("admin.service.comment.index", compact("comments", "service"));
     }

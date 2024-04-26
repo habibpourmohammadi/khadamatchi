@@ -7,22 +7,26 @@
             </a>
             <ul class="flex flex-wrap items-center mb-6 text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
                 <li>
-                    <a href="{{ route("home.index") }}" class="hover:underline me-4 md:me-6">خانه</a>
+                    <a href="{{ route('home.index') }}" class="hover:underline me-4 md:me-6">خانه</a>
                 </li>
                 <li>
-                    <a href="{{ route("home.contact-us.page") }}" class="hover:underline me-4 md:me-6">ارتباط با ما</a>
+                    <a href="{{ route('home.contact-us.page') }}" class="hover:underline me-4 md:me-6">ارتباط با ما</a>
                 </li>
                 <li>
-                    <a href="{{ route("home.faqPage.page") }}" class="hover:underline me-4 md:me-6">سوالات متداول</a>
+                    <a href="{{ route('home.faqPage.page') }}" class="hover:underline me-4 md:me-6">سوالات متداول</a>
                 </li>
                 <li>
-                    <a href="#" class="hover:underline">
-                        @auth
+                    @auth
+                        <a href="{{ route('home.my-profile.page') }}" class="hover:underline">
                             حساب کاربری
-                        @endauth
-                        @guest
+                        </a>
+                    @endauth
+                    @guest
+                        <a href="{{ route('home.login.page') }}" class="hover:underline">
+
                             ورود به حساب کاربری
-                        @endguest
+                        </a>
+                    @endguest
                     </a>
                 </li>
             </ul>

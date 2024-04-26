@@ -1,21 +1,22 @@
 <?php
 
-use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\CityController;
-use App\Http\Controllers\Admin\ContactMessageController;
-use App\Http\Controllers\Admin\FaqController;
-use App\Http\Controllers\Admin\HomeController;
-use App\Http\Controllers\Admin\ProvinceController;
-use App\Http\Controllers\Admin\Service\CommentController;
-use App\Http\Controllers\Admin\Service\ImageController;
-use App\Http\Controllers\Admin\ServiceController;
-use App\Http\Controllers\Admin\TagController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Home\AuthController;
-use App\Http\Controllers\Home\HomeController as HomeHomeController;
-use App\Http\Controllers\Home\MyProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\FaqController;
+use App\Http\Controllers\Admin\TagController;
+use App\Http\Controllers\Home\AuthController;
+use App\Http\Controllers\Admin\CityController;
+use App\Http\Controllers\Admin\HomeController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\CommentController;
+use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ProvinceController;
+use App\Http\Controllers\Home\MyProfileController;
+use App\Http\Controllers\Admin\Service\ImageController;
+use App\Http\Controllers\Admin\ContactMessageController;
+use App\Http\Controllers\Home\HomeController as HomeHomeController;
+use App\Http\Controllers\Admin\Service\CommentController as ServiceCommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -113,7 +114,7 @@ Route::middleware(["admin", "auth"])->prefix("admin")->group(function () {
         Route::get("/tags/{service}", "tags")->name("admin.service.tags");
 
         // comments
-        Route::controller(CommentController::class)->prefix("comment")->group(function () {
+        Route::controller(ServiceCommentController::class)->prefix("comment")->group(function () {
             Route::get("/{service}", "index")->name("admin.service.comment.index");
             Route::get("/show/{service}/{comment}", "show")->name("admin.service.comment.show")->scopeBindings();
             Route::post("/change-status/{service}/{comment}", "changeStatus")->name("admin.service.comment.changeStatus")->scopeBindings();
@@ -160,5 +161,16 @@ Route::middleware(["admin", "auth"])->prefix("admin")->group(function () {
         Route::get("/{message}", "show")->name("admin.contactMessage.show");
         Route::post("/change-seen-status/{message}", "changeSeenStatus")->name("admin.contactMessage.changeSeenStatus");
         Route::delete("/delete/{message}", "destroy")->name("admin.contactMessage.delete");
+    });
+
+    // comments
+    Route::controller(CommentController::class)->prefix("comment")->group(function () {
+        Route::get("/", "index")->name("admin.comment.index");
+        Route::get("/create", "create")->name("admin.comment.create");
+        Route::post("/store", "store")->name("admin.comment.store");
+        Route::get("/edit/{comment}", "edit")->name("admin.comment.edit");
+        Route::put("/update/{comment}", "update")->name("admin.comment.update");
+        Route::post("/change-status/{comment}", "changeStatus")->name("admin.comment.change-status");
+        Route::delete("/delete/{comment}", "destroy")->name("admin.comment.delete");
     });
 });
