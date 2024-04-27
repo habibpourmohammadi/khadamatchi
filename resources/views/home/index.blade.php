@@ -3,7 +3,45 @@
     <title>خدمات چی | khadamatchi</title>
 @endsection
 @section('content')
-    <div class="mt-5 md:mt-14">
+    <div class="text-center mb-5 mt-8 md:mb-8 md:mt-10">
+        <h1 class="text-lg md:text-2xl">
+            <span class="border-b border-red-500">
+                فرد متخصص رو نسبت به فیلتر های خودت انتخاب کن
+            </span>
+        </h1>
+    </div>
+    <form class="mt-5 flex flex-col mx-5 md:flex-row md:justify-between">
+        <div class="mb-3 flex flex-col md:flex-row md:w-full">
+            <div class="mb-2 md:w-2/4 md:mx-1">
+                <input type="text" name=""
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="جستجو ...">
+            </div>
+            <div class="mb-2 md:w-1/4 md:mx-1">
+                <select name="category"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option value="">همه دسته بندی ها</option>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->slug }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="md:w-1/4 md:mx-1">
+                <select name="city"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option value="">همه شهر ها</option>
+                    @foreach ($cities as $city)
+                        <option value="{{ $city->slug }}">{{ $city->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+        <div>
+            <button
+                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">جستجو</button>
+        </div>
+    </form>
+    <div class="mt-5 md:mt-10">
         <a href="">
             <img src="{{ asset('home-assets/images/banner.png') }}" alt=""
                 class="rounded-lg md:rounded-2xl w-full md:w-4/5 m-auto">
@@ -43,42 +81,34 @@
         </div>
         <livewire:register-expertise>
     </div>
-    <div class="text-center mb-5 mt-8 md:mb-8 md:mt-10">
-        <h1 class="text-lg md:text-2xl">
-            <span class="border-b border-red-500">
-                فرد متخصص رو نسبت به فیلتر های خودت انتخاب کن
-            </span>
-        </h1>
+    <div class="mt-8 md:mt-10">
+        <div class="text-center mb-8">
+            <h1 class="text-2xl">
+                <span class="border-b border-red-500">
+                    نظرات کاربران خدمات چی 💬
+                </span>
+            </h1>
+        </div>
+        <div class="flex flex-row flex-wrap justify-center">
+            @foreach ($comments as $comment)
+                <div
+                    class="mx-1 my-1 block max-w-sm px-6 py-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                    <p class="font-normal text-gray-700 dark:text-gray-400 pb-2">
+                        {{ $comment->comment }}
+                    </p>
+                    <div class="flex items-center gap-4 border-t-2 pt-3">
+                        @if ($comment->user->profile_path !== null)
+                            <img class="w-9 h-9 rounded-full" src="{{ asset($comment->user->profile_path) }}"
+                                alt="">
+                        @endif
+                        <div class="font-medium dark:text-white">
+                            <div>
+                                {{ $comment->user->full_name }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
     </div>
-    <form class="mt-5 flex flex-col mx-5 md:flex-row md:justify-between">
-        <div class="mb-3 flex flex-col md:flex-row md:w-full">
-            <div class="mb-2 md:w-2/4 md:mx-1">
-                <input type="text" name=""
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="جستجو ...">
-            </div>
-            <div class="mb-2 md:w-1/4 md:mx-1">
-                <select name="category"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option value="">همه دسته بندی ها</option>
-                    @foreach ($categories as $category)
-                        <option value="{{ $category->slug }}">{{ $category->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="md:w-1/4 md:mx-1">
-                <select name="city"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option value="">همه شهر ها</option>
-                    @foreach ($cities as $city)
-                        <option value="{{ $city->slug }}">{{ $city->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-        <div>
-            <button
-                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">جستجو</button>
-        </div>
-    </form>
 @endsection

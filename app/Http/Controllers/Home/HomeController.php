@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Home;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\City;
+use App\Models\Comment;
 use App\Models\Faq;
 use Illuminate\Http\Request;
 
@@ -22,8 +23,11 @@ class HomeController extends Controller
         // Retrieve all active categories
         $categories = Category::where("status", "active")->get();
 
+        // Retrieve active comments with associated users
+        $comments = Comment::where("status", "active")->with("user")->get();
+
         // Pass the retrieved data to the view
-        return view("home.index", compact("cities", "categories", "categoriesHasImage"));
+        return view("home.index", compact("cities", "categories", "categoriesHasImage", "comments"));
     }
 
     /**
