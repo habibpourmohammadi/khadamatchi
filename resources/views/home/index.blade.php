@@ -42,7 +42,7 @@
         </div>
     </form>
     <div class="mt-5 md:mt-10">
-        <a href="">
+        <a href="{{ route('home.services.index') }}">
             <img src="{{ asset('home-assets/images/banner.png') }}" alt=""
                 class="rounded-lg md:rounded-2xl w-full md:w-4/5 m-auto">
         </a>

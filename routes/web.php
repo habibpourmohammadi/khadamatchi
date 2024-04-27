@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\Service\ImageController;
 use App\Http\Controllers\Admin\ContactMessageController;
 use App\Http\Controllers\Home\HomeController as HomeHomeController;
 use App\Http\Controllers\Admin\Service\CommentController as ServiceCommentController;
+use App\Http\Controllers\Home\ServiceController as HomeServiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +55,11 @@ Route::get("/contact-us", [HomeHomeController::class, "contactUsPage"])->name("h
 
 // frequently asked questions (FAQ)
 Route::get("/faq", [HomeHomeController::class, "faqPage"])->name("home.faqPage.page");
+
+// service
+Route::controller(HomeServiceController::class)->prefix("services")->group(function () {
+    Route::get("/", "index")->name("home.services.index");
+});
 
 // ------------------------ Admin ------------------------
 Route::middleware(["admin", "auth"])->prefix("admin")->group(function () {

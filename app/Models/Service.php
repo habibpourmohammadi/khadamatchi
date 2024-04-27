@@ -81,4 +81,12 @@ class Service extends Model
 
         return $this->work_experience_duration . ' ' . $unit;
     }
+
+    /**
+     * Scope a query to search for a specific value in title or slug.
+     */
+    public function scopeSearch($query, $value)
+    {
+        $query->where("title", "like", "%{$value}%")->orWhere("slug", "like", "%{$value}%");
+    }
 }
