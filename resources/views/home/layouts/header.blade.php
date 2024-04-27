@@ -104,7 +104,7 @@
                         <ul class="py-2 text-sm text-gray-700 dark:text-gray-400" aria-labelledby="dropdownLargeButton">
                             @foreach ($categories as $category)
                                 <li>
-                                    <a href="#"
+                                    <a href="{{ route('home.services.index', ['category' => $category->slug]) }}"
                                         class="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600 dark:hover:text-white">
                                         {{ $category->name }}
                                     </a>
@@ -114,12 +114,12 @@
                     </div>
                 </li>
                 <li>
-                    <a href="{{ route("home.contact-us.page") }}"
+                    <a href="{{ route('home.contact-us.page') }}"
                         class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">ارتباط
                         با ما</a>
                 </li>
                 <li>
-                    <a href="{{ route("home.faqPage.page") }}"
+                    <a href="{{ route('home.faqPage.page') }}"
                         class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-200 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">سوالات
                         متداول</a>
                 </li>

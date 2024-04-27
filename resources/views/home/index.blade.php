@@ -59,11 +59,11 @@
         @foreach ($categoriesHasImage as $category)
             <div
                 class="w-full max-w-44 m-3 bg-white border border-gray-200 delay-75 transition-all hover:border-red-300 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700">
-                <a href="#">
+                <a href="{{ route('home.services.index', ['category' => $category->slug]) }}">
                     <img class="p-1 rounded-t-lg" src="{{ asset($category->image_path) }}" alt="{{ $category->slug }}" />
                 </a>
                 <div class="px-1 pb-3 text-center">
-                    <a href="">
+                    <a href="{{ route('home.services.index', ['category' => $category->slug]) }}">
                         <h5 class="text-sm font-semibold tracking-tight text-gray-900 dark:text-white">
                             {{ $category->name }}
                         </h5>
