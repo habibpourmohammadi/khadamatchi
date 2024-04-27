@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Models\City;
 use App\Models\Admin;
 use App\Models\Service;
+use App\Models\Bookmark;
 use App\Models\Province;
 use App\Models\ServiceComment;
 use Laravel\Sanctum\HasApiTokens;
@@ -118,6 +119,20 @@ class User extends Authenticatable
             default:
                 return "مشخص نشده";
                 break;
+        }
+    }
+
+    public function bookmarks()
+    {
+        return $this->hasMany(Bookmark::class);
+    }
+
+    public function hasBookmark($serviceId)
+    {
+        if ($this->bookmarks()->where("service_id", $serviceId)->first()) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

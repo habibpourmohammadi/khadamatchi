@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Tag;
 use App\Models\City;
 use App\Models\User;
+use App\Models\Bookmark;
 use App\Models\Category;
 use App\Models\Province;
 use App\Models\ServiceImage;
@@ -88,5 +89,10 @@ class Service extends Model
     public function scopeSearch($query, $value)
     {
         $query->where("title", "like", "%{$value}%")->orWhere("slug", "like", "%{$value}%");
+    }
+
+    public function bookmarks()
+    {
+        return $this->hasMany(Bookmark::class);
     }
 }

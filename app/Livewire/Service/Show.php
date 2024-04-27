@@ -2,10 +2,12 @@
 
 namespace App\Livewire\Service;
 
+use App\Models\Bookmark;
 use App\Models\Service;
 use Livewire\Component;
 use App\Models\Category;
 use App\Models\City;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\WithPagination;
 use Livewire\Attributes\Computed;
@@ -74,6 +76,24 @@ class Show extends Component
         }
     }
 
+    // Toggles the bookmark status for a given service.
+    public function changeBookmark(Service $service)
+    {
+        // Check if the authenticated user has already bookmarked the service
+        $bookmark = Auth::user()->bookmarks()->where("service_id", $service->id)->first();
+
+        // If a bookmark exists, delete it (unbookmark)
+        if ($bookmark) {
+            $bookmark->delete();
+        } else {
+            // If no bookmark exists, create a new bookmark for the service
+            Bookmark::create([
+                "user_id" => Auth::user()->id,
+                "service_id" => $service->id,
+            ]);
+        }
+    }
+
     // Computed property to fetch paginated services based on filters
     #[Computed()]
     public function services()
@@ -85,6 +105,7 @@ class Show extends Component
             ->with("user", "category", "province", "city")
             ->paginate(6);
     }
+
 
     // Render the Livewire component view
     public function render()
