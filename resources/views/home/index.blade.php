@@ -10,10 +10,11 @@
             </span>
         </h1>
     </div>
-    <form class="mt-5 flex flex-col mx-5 md:flex-row md:justify-between">
+    <form action="{{ route('home.services.index') }}" method="GET"
+        class="mt-5 flex flex-col mx-5 md:flex-row md:justify-between">
         <div class="mb-3 flex flex-col md:flex-row md:w-full">
             <div class="mb-2 md:w-2/4 md:mx-1">
-                <input type="text" name=""
+                <input type="text" name="search"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="جستجو ...">
             </div>
