@@ -152,4 +152,20 @@ class MyProfileController extends Controller
 
         return to_route("home.my-profile.page")->with("swal-success", "ایمیل شما با موفقیت تایید شد");
     }
+
+    /**
+     * Renders the user's services page if the user has at least one service.
+     * If the user has no services, it aborts with a 404 error.
+     */
+    public function myServicesPage()
+    {
+        // Check if the authenticated user has any services
+        if (Auth::user()->services()->count() <= 0) {
+            // If the user has no services, abort with a 404 error
+            abort(404);
+        }
+
+        // Render the my-services view if the user has services
+        return view("home.my-profile.my-services");
+    }
 }
