@@ -10,11 +10,11 @@
         @forelse ($this->services as $service)
             <div
                 class="max-w-sm mx-2 my-2 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                <a href="#">
-                    <img class="rounded-t-lg"
-                        src="https://fastly.picsum.photos/id/0/5000/3333.jpg?hmac=_j6ghY5fCfSD6tvtcV74zXivkJSPIfR9B8w34XeQmvU"
-                        alt="" />
-                </a>
+                <div class="max-w-56 max-h-56 m-auto">
+                    <a href="#">
+                        <img class="rounded-t-lg" src="{{ asset($service->service_image_path) }}" alt="" />
+                    </a>
+                </div>
                 <div class="p-5">
                     <div class="flex flex-row justify-between">
                         <a href="">

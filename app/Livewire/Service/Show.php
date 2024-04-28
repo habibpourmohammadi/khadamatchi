@@ -102,6 +102,7 @@ class Show extends Component
             ->where("category_id", $this->categoryFilter, $this->category)
             ->where("city_id", $this->cityFilter, $this->city)
             ->where("status", "active")
+            ->where("service_image_path", "!=", null)
             ->with("user", "category", "province", "city")
             ->paginate(6);
     }
