@@ -21,6 +21,16 @@
                     <span class="block pt-2 font-normal text-lg text-gray-700 dark:text-gray-400">
                         نام و نام خانوادگی : {{ $service->user->full_name ?? '-' }}
                     </span>
+                    @auth
+                        <span class="block pt-2 font-normal text-lg {{ $service->user->mobile == null ? 'text-red-700' : 'text-gray-700' }} dark:text-gray-400">
+                            شماره تماس : {{ $service->user->mobile ?? 'ثبت نشده' }}
+                        </span>
+                    @endauth
+                    @guest
+                        <span class="block pt-2 font-normal text-lg text-gray-700 dark:text-gray-400">
+                            شماره تماس : <a href="{{ route("home.login.page") }}" class="text-blue-700">برای دیدن شماره تماس ابتدا وارد حساب خود شوید</a>
+                        </span>
+                    @endguest
                     <span class="block pt-2 font-normal text-lg text-gray-700 dark:text-gray-400">
                         سابقه کاری : {{ $service->work_experience ?? '-' }}
                     </span>
@@ -38,5 +48,6 @@
                     </span>
             </div>
         </div>
+        <livewire:service.show.comment :service-slug="$service->slug" />
     </div>
 @endsection
