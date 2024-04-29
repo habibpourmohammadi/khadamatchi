@@ -119,8 +119,11 @@ class MyServices extends Component
                     "work_experience_unit" => $this->editWorkExperienceUnit,
                 ]);
 
-                // Close the modal and provide success feedback
+                // Resetting form input fields and closing modal after successfully editing a service
+                $this->reset("editTitle", "editCategory", "editProvince", "editCity", "editServiceImage", "editWorkExperienceUnit", "editWorkExperienceDuration", "editDescription");
+
                 $this->dispatch("close-modal");
+
                 return back()->with("success-alert", "سرویس مورد نظر با موفقیت ویرایش شد");
             }
         } else {
