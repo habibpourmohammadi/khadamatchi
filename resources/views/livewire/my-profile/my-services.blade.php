@@ -9,7 +9,7 @@
                 class="max-w-sm mx-2 my-2 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <div class="max-w-56 max-h-56 m-auto">
                     @if ($service->service_image_path)
-                        <a href="#">
+                        <a href="{{ route('home.services.show', $service) }}">
                             <img class="rounded-t-lg" src="{{ asset($service->service_image_path) }}" alt="" />
                         </a>
                     @else
@@ -19,7 +19,7 @@
                     @endif
                 </div>
                 <div class="p-5">
-                    <a href="">
+                    <a href="{{ route('home.services.show', $service) }}">
                         <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
                             {{ $service->title }}
                         </h5>
@@ -42,7 +42,7 @@
                         </span>
                     </p>
                     <div class="flex flex-row justify-between border-t-2 pt-3">
-                        <a href="#"
+                        <a href="{{ route('home.services.show', $service) }}"
                             class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                             نمایش
                         </a>
