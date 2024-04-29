@@ -168,4 +168,12 @@ class MyProfileController extends Controller
         // Render the my-services view if the user has services
         return view("home.my-profile.my-services");
     }
+
+    /**
+     * Render the user's bookmarks page.
+     */
+    public function myBookmarksPage()
+    {
+        return view("home.my-profile.my-bookmarks");
+    }
 }

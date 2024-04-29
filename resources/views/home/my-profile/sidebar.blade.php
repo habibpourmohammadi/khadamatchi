@@ -9,7 +9,7 @@
             <span>سرویس های من</span>
         </a>
     @endif
-    <a href=""
+    <a href="{{ route('home.my-bookmarks.page') }}"
         class="my-2 block hover:bg-gray-200 rounded-lg py-2 px-2 mx-1 hover:cursor-pointer hover:text-blue-700 transition-all">
         <span>لیست علاقه مندی های من</span>
     </a>

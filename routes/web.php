@@ -49,6 +49,7 @@ Route::middleware("auth")->controller(MyProfileController::class)->prefix("my-pr
     Route::post("/send-verify-token", "sendVerifyToken")->name("home.my-profile.send-verify-token");
     Route::get("/verify-email/{user:token}", "verifyEmail")->name("home.my-profile.verify-email");
     Route::get("/my-services", "myServicesPage")->name("home.my-services.page");
+    Route::get("/my-bookmarks", "myBookmarksPage")->name("home.my-bookmarks.page");
 });
 
 // contact us
