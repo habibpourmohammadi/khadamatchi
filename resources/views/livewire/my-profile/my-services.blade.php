@@ -5,7 +5,7 @@
     </div>
     <div class="flex flex-row flex-wrap justify-center">
         @forelse ($this->services as $service)
-            <div wire:key="service-id-{{ $service->id }}"
+            <div wire:key="service-slug-{{ $service->slug }}"
                 class="max-w-sm mx-2 my-2 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <div class="max-w-56 max-h-56 m-auto">
                     @if ($service->service_image_path)
@@ -122,7 +122,7 @@
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                 <option value="">استان را انتخاب کنید</option>
                                 @foreach ($provinces as $province)
-                                    <option value="{{ $province->slug }}">{{ $province->name }}</option>
+                                    <option wire:key="province-slug-{{ $province->slug }}" value="{{ $province->slug }}">{{ $province->name }}</option>
                                 @endforeach
                             </select>
                             @error('editProvince')
@@ -138,8 +138,10 @@
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                 <option value="">شهر را انتخاب کنید</option>
                                 @foreach ($cities as $city)
-                                    <option value="{{ $city->slug }}">
-                                        {{ $city->name }}</option>
+                                    <option wire:key="city-slug-{{ $city->slug }}" @selected($city->slug == $editCity)
+                                        value="{{ $city->slug }}">
+                                        {{ $city->name }}
+                                    </option>
                                 @endforeach
                             </select>
                             @error('editCity')
@@ -155,7 +157,7 @@
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                 <option value="">دسته بندی را انتخاب کنید</option>
                                 @foreach ($categories as $category)
-                                    <option value="{{ $category->slug }}">
+                                    <option wire:key="category-slug-{{ $category->slug }}" value="{{ $category->slug }}">
                                         {{ $category->name }}</option>
                                 @endforeach
                             </select>

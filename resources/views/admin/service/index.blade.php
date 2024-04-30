@@ -64,9 +64,9 @@
                         <td>{{ Str::limit($service->title, 35, '...') }}</td>
                         <td>{{ Str::limit($service->slug, 35, '...') ?? '-' }}</td>
                         <th>
-                            @if ($service->image_path && \File::exists(public_path($service->service_image_path)))
+                            @if ($service->service_image_path && \File::exists(public_path($service->service_image_path)))
                                 <a href="{{ asset($service->service_image_path) }}" target="_blank">
-                                    <img src="{{ asset($service->service_image_path) }}" alt="عکس پیدا نشد">
+                                    <img src="{{ asset($service->service_image_path) }}" alt="عکس پیدا نشد" width="50">
                                 </a>
                             @else
                                 <span class="text-danger">عکس پیدا نشد</span>

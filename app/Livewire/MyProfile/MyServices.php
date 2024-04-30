@@ -153,9 +153,11 @@ class MyServices extends Component
         if ($this->serviceAuthentication($serviceId)) {
             // Retrieve the service data and pre-fill the edit form
             $this->editService = Service::find($serviceId);
+            $this->reset("editTitle", "cities", "editProvince", "editCategory", "editWorkExperienceUnit", "editWorkExperienceDuration", "editDescription", "editCity");
             $this->fill([
                 "editTitle" => $this->editService->title,
                 "cities" => $this->editService->province->cities()->where("status", "active")->get(),
+                "editCity" => $this->editService->city->slug,
                 "editProvince" => $this->editService->province->slug,
                 "editCategory" => $this->editService->category->slug,
                 "editWorkExperienceUnit" => $this->editService->work_experience_unit,
