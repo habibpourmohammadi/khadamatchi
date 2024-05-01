@@ -40,21 +40,72 @@
                         <span class="block">
                             دسته بندی : {{ $service->category->name ?? '-' }}
                         </span>
+                        <span class="block">
+                            وضعیت :
+                            <span
+                                class="font-bold {{ $service->status == 'deactive' ? 'text-red-700' : 'text-green-700' }}">
+                                {{ $service->status == 'active' ? 'فعال' : 'غیر فعال' }}
+                            </span>
+                        </span>
                     </p>
-                    <div class="flex flex-row justify-between border-t-2 pt-3">
-                        <a href="{{ route('home.services.show', $service) }}"
-                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                            نمایش
-                        </a>
-                        <button wire:click="setEditValue({{ $service->id }})"
-                            class="inline-flex items-center ms-1 px-3 py-2 text-sm font-medium text-center text-white bg-teal-700 rounded-lg hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800">
-                            ویرایش
+                    <div class="flex flex-row justify-between items-center border-t-2 pt-3">
+                        تنظیمات
+                        <button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownDots-{{ $service->slug }}"
+                            data-dropdown-placement="bottom-start"
+                            class="inline-flex self-center items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800 dark:focus:ring-gray-600"
+                            type="button">
+                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
+                                <path
+                                    d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
+                            </svg>
                         </button>
-                        <button type="button" wire:click="delete({{ $service->id }})"
-                            wire:confirm="آیا از حذف کردن این سرویس مطمعنید ؟ "
-                            class="inline-flex items-center ms-1 px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
-                            حذف
-                        </button>
+                        <div id="dropdownDots-{{ $service->slug }}"
+                            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-2xl w-40 dark:bg-gray-700 dark:divide-gray-600">
+                            <ul class="text-sm text-gray-700 dark:text-gray-200"
+                                aria-labelledby="dropdownMenuIconButton">
+                                <li>
+                                    <a href="{{ route('home.services.show', $service) }}"
+                                        class="block py-1.5 text-sm font-sm text-center text-white bg-blue-700 rounded-t-lg rounded-b-sm hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                        نمایش
+                                    </a>
+                                </li>
+                                <li>
+                                    <button wire:click="setEditValue({{ $service->id }})"
+                                        class="block w-full py-1.5 text-sm font-medium text-center text-white bg-teal-700 my-1 rounded-sm hover:bg-teal-800 focus:ring-4 focus:outline-none focus:ring-teal-300 dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800">
+                                        ویرایش
+                                    </button>
+                                </li>
+                                <li>
+                                    <button wire:click="setTags({{ $service->id }})"
+                                        class="tagBtn block w-full py-1.5 text-sm font-medium text-center text-white bg-cyan-700 my-1 rounded-sm hover:bg-cyan-800 focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:bg-cyan-600 dark:hover:bg-cyan-700 dark:focus:ring-cyan-800">
+                                        تگ ها
+                                    </button>
+                                </li>
+                                <li>
+                                    <button wire:loading.remove type="button" wire:click="delete({{ $service->id }})"
+                                        wire:confirm="آیا از حذف کردن این سرویس مطمعنید ؟ "
+                                        class="block w-full py-1.5 text-sm font-medium text-center text-white bg-red-700 rounded-b-lg rounded-t-sm hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                                        حذف
+                                    </button>
+                                    <button wire:loading wire:target="delete({{ $service->id }})" disabled
+                                        type="button"
+                                        class="text-white w-full bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-b-lg rounded-t-sm text-sm py-1.5 text-center me-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 inline-flex items-center">
+                                        صبر کنید ...
+                                        <svg aria-hidden="true" role="status"
+                                            class="inline w-4 h-4 ms-3 text-white animate-spin" viewBox="0 0 100 101"
+                                            fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                                fill="#E5E7EB" />
+                                            <path
+                                                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                                fill="currentColor" />
+                                        </svg>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -76,7 +127,7 @@
         @endforelse
     </div>
 
-    <!-- Main modal -->
+    <!-- edit modal -->
     <div x-cloak x-data="{ show: false }" x-show="show" x-on:open-modal.window="show = true"
         x-on:close-modal.window="show = false" x-transition tabindex="-1" aria-hidden="true"
         class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full flex">
@@ -114,7 +165,8 @@
                             @enderror
                         </div>
                         <div class="col-span-2 sm:col-span-1">
-                            <label for="province" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            <label for="province"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 استان شما
                                 <span class="text-red-700 font-bold">*</span>
                             </label>
@@ -122,7 +174,8 @@
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                 <option value="">استان را انتخاب کنید</option>
                                 @foreach ($provinces as $province)
-                                    <option wire:key="province-slug-{{ $province->slug }}" value="{{ $province->slug }}">{{ $province->name }}</option>
+                                    <option wire:key="province-slug-{{ $province->slug }}"
+                                        value="{{ $province->slug }}">{{ $province->name }}</option>
                                 @endforeach
                             </select>
                             @error('editProvince')
@@ -130,7 +183,8 @@
                             @enderror
                         </div>
                         <div class="col-span-2 sm:col-span-1">
-                            <label for="city" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            <label for="city"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 شهر شما
                                 <span class="text-red-700 font-bold">*</span>
                             </label>
@@ -149,7 +203,8 @@
                             @enderror
                         </div>
                         <div class="col-span-2 sm:col-span-1">
-                            <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            <label for="category"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 دسته بندی تخصص شما
                                 <span class="text-red-700 font-bold">*</span>
                             </label>
@@ -157,7 +212,8 @@
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                 <option value="">دسته بندی را انتخاب کنید</option>
                                 @foreach ($categories as $category)
-                                    <option wire:key="category-slug-{{ $category->slug }}" value="{{ $category->slug }}">
+                                    <option wire:key="category-slug-{{ $category->slug }}"
+                                        value="{{ $category->slug }}">
                                         {{ $category->name }}</option>
                                 @endforeach
                             </select>
@@ -222,8 +278,7 @@
                                 <span class="text-red-700 font-bold">*</span>
                             </label>
                             <textarea id="description" rows="4" wire:model="editDescription"
-                                class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Write product description here"></textarea>
+                                class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
                         </div>
                     </div>
                     <button type="submit"
@@ -234,4 +289,89 @@
             </div>
         </div>
     </div>
+
+
+    <!-- tags modal -->
+    <div x-cloak x-data="{ show: false }" x-show="show" x-on:open-tag-modal.window="show = true"
+        x-on:close-tag-modal.window="show = false" x-transition tabindex="-1" aria-hidden="true"
+        class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full flex">
+        <div class="relative p-4 w-full max-w-md max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <!-- Modal header -->
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                        تگ های سرویس : {{ $editService->title ?? '-' }}
+                    </h3>
+                    <button id="tag-modal-close-btn" x-on:click="show = false" type="button"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <form wire:submit="updateTags" class="p-4 md:p-5">
+                    <div class="mb-4">
+                        <div>
+                            <label for="title"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                تگ های مورد نظر را انتخاب کنید
+                            </label>
+                            <div wire:ignore>
+                                <select multiple wire:model="finalSelectedTags" id="selectedTags"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                    @foreach ($tags as $tag)
+                                        <option wire:key="tag-slug-{{ $tag->slug }}" value="{{ $tag->slug }}">
+                                            {{ $tag->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" id="editTags"
+                        class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        ویرایش تگ ها
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
+@script
+    <script>
+        // Function to handle click event on tag modal close button
+        $("#tag-modal-close-btn").click(function(e) {
+            // Reset the selectedTags input field value to an empty array
+            $("#selectedTags").val([]);
+        });
+
+        // Event listener to handle the 'open-tag-modal' event
+        document.addEventListener('open-tag-modal', function() {
+            // Retrieve the selectedTags input element
+            let selectInput = $("#selectedTags");
+            // Initialize an empty array to store selected tag slugs
+            let selectedTags = [];
+
+            // Loop through the selectedTags from Livewire component and extract slugs
+            $wire.selectedTags.forEach(element => {
+                selectedTags.push(element.slug);
+            });
+
+            // Set the value of the selectedTags input field to the array of selected tag slugs
+            selectInput.val(selectedTags);
+
+            // Initialize select2 on the selectedTags input field
+            selectInput.select2();
+        });
+
+        // Function to handle click event on editTags button
+        $("#editTags").click(function(e) {
+            // Update the finalSelectedTags in the Livewire component with the values from selectedTags input field
+            $wire.finalSelectedTags = $("#selectedTags").val()
+        });
+    </script>
+@endscript

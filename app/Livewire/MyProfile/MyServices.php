@@ -7,6 +7,7 @@ use App\Models\Service;
 use Livewire\Component;
 use App\Models\Category;
 use App\Models\Province;
+use App\Models\Tag;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Auth;
@@ -28,6 +29,21 @@ class MyServices extends Component
 
     // Property for storing the service being edited
     public $editService = null;
+
+    /**
+     * All available tags.
+     */
+    public $tags;
+
+    /**
+     * The tags that were previously associated with the service.
+     */
+    public $selectedTags = [];
+
+    /**
+     * The final selected tags that should be saved to the database.
+     */
+    public $finalSelectedTags = [];
 
     // Input properties with validation rules for service editing form
 
@@ -56,13 +72,14 @@ class MyServices extends Component
     public $editDescription;
 
     /**
-     * Initializes the component by loading provinces and categories data.
+     * Initializes the component by loading provinces and categories and tags data.
      */
     public function mount()
     {
         $this->cities = [];
         $this->provinces = Province::where("status", "active")->get();
         $this->categories = Category::where("status", "active")->get();
+        $this->tags = Tag::where("status", "active")->get();
     }
 
     /**
@@ -166,6 +183,69 @@ class MyServices extends Component
             ]);
             $this->dispatch("open-modal");
         } else {
+            return back()->with("error-alert", "لطفا دوباره تلاش کنید");
+        }
+    }
+
+    /**
+     * This method is used to set tags for a specific service
+     */
+    public function setTags($serviceId)
+    {
+        // Check if the user is authorized to edit the service
+        if ($this->serviceAuthentication($serviceId)) {
+            // Reset the finalSelectedTags array to prepare for new selections
+            $this->reset("finalSelectedTags");
+            // Find the service by ID
+            $this->editService = Service::find($serviceId);
+            // Retrieve the selected tags associated with the service and store them in the selectedTags array
+            $this->selectedTags = $this->editService->tags()->where("status", "active")->select('name', "slug")->get()->toArray();
+            // Open the tag modal for tag selection
+            $this->dispatch("open-tag-modal");
+        } else {
+            // If the user is not authorized, redirect back with an error message
+            return back()->with("error-alert", "لطفا دوباره تلاش کنید");
+        }
+    }
+
+    public function updateTags()
+    {
+        // Check if the authenticated user has permission to update the tags for the service
+        if ($this->serviceAuthentication($this->editService->id)) {
+            $tagIds = [];
+
+            // Retrieve the tag IDs based on the final selected tags
+            foreach ($this->finalSelectedTags as $tag) {
+                // Find the tag ID by slug and ensure it's active
+                $tagId = Tag::where("slug", $tag)->where("status", "active")->first()->id ?? null;
+
+                // If a tag ID is found, add it to the array
+                if ($tagId) {
+                    $tagIds[] = $tagId;
+                }
+            }
+
+            // Check if any tag ID is null (indicating invalid tags)
+            if (in_array(null, $tagIds)) {
+                // Reset the finalSelectedTags and close the tag modal
+                $this->dispatch("close-tag-modal");
+                $this->reset("finalSelectedTags");
+
+                // Return back with an error message
+                return back()->with("error-alert", "لطفا دوباره تلاش کنید");
+            } else {
+                // Sync the tag IDs with the service's tags
+                $this->editService->tags()->sync($tagIds);
+
+                // Reset finalSelectedTags and close the tag modal
+                $this->dispatch("close-tag-modal");
+                $this->reset("finalSelectedTags");
+
+                // Return back with a success message
+                return back()->with("success-alert", "تگ های سرویس مورد نظر با موفقیت ویرایش شدند");
+            }
+        } else {
+            // If the user doesn't have permission, return back with an error message
             return back()->with("error-alert", "لطفا دوباره تلاش کنید");
         }
     }

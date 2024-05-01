@@ -5,4 +5,5 @@
 <link rel="stylesheet" href="{{ asset('home-assets/css/main.css') }}">
 <link rel="stylesheet" href="{{ asset('home-assets/fontawesome/css/all.min.css') }}">
 <link rel="stylesheet" href="{{ asset('admin-assets/sweetalert/css/sweetalert2.css') }}">
+<link rel="stylesheet" href="{{ asset('home-assets/css/select2.min.css') }}">
 @vite(['resources/css/app.css', 'resources/js/app.js'])

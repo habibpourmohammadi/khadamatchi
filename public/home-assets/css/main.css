@@ -6,3 +6,7 @@
 body {
     font-family: YekanBakhMedium;
 }
+
+.select2 {
+    width: 100% !important;
+}
