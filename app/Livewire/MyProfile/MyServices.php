@@ -7,6 +7,7 @@ use App\Models\Service;
 use Livewire\Component;
 use App\Models\Category;
 use App\Models\Province;
+use App\Models\ServiceImage;
 use App\Models\Tag;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;
@@ -44,6 +45,17 @@ class MyServices extends Component
      * The final selected tags that should be saved to the database.
      */
     public $finalSelectedTags = [];
+
+    /**
+     * images related to the service
+     */
+    public $images;
+
+    /**
+     *
+     */
+    #[Validate("required|image|mimes:png,jpg,jpeg|max:1024")]
+    public $image;
 
     // Input properties with validation rules for service editing form
 
@@ -88,12 +100,21 @@ class MyServices extends Component
     public function updateService()
     {
         // Validate input data
-        $this->validate();
+        $this->validateOnly(
+            "editTitle.editProvince.editCity.editCategory.editServiceImage.editWorkExperienceUnit.editWorkExperienceDuration.editDescription",
+        );
 
         // Ensure user is authorized to edit the service
         if ($this->serviceAuthentication($this->editService->id)) {
             // Handle service image upload and update service data
             if ($this->editServiceImage) {
+                // Check if the uploaded file is not a PNG, JPEG, or JPG image
+                // OR if the file size exceeds 1 MB.
+                if (!in_array($this->editServiceImage->extension(), ["png", "jpeg", "jpg"]) || $this->editServiceImage->getSize() > 1024000) {
+                    // Close the modal and display an error message.
+                    $this->dispatch("close-modal");
+                    return back()->with("error-alert", "لطفا دوباره تلاش کنید");
+                }
                 // Delete existing service image if it exists
                 if ($this->editService->service_image_path != null && File::exists(public_path($this->editService->service_image_path))) {
                     File::delete(public_path($this->editService->service_image_path));
@@ -144,6 +165,7 @@ class MyServices extends Component
                 return back()->with("success-alert", "سرویس مورد نظر با موفقیت ویرایش شد");
             }
         } else {
+            $this->dispatch("close-modal");
             return back()->with("error-alert", "لطفا دوباره تلاش کنید");
         }
     }
@@ -246,6 +268,116 @@ class MyServices extends Component
             }
         } else {
             // If the user doesn't have permission, return back with an error message
+            return back()->with("error-alert", "لطفا دوباره تلاش کنید");
+        }
+    }
+
+    /**
+     * Set and prepare images for a specified service.
+     */
+    public function setImages($serviceId)
+    {
+        // Check service authentication
+        if ($this->serviceAuthentication($serviceId)) {
+            // Reset images and image properties
+            $this->reset("images", "image");
+            // Retrieve service for editing
+            $this->editService = Service::find($serviceId);
+            // Retrieve active images associated with the service
+            $this->images = $this->editService->images()->where("status", "active")->get();
+            // Set images to null if no active images found
+            if ($this->images->count() <= 0) {
+                $this->images = null;
+            }
+
+            // Dispatch event to open images modal
+            $this->dispatch("open-images-modal");
+        } else {
+            // If service authentication fails, return with error alert
+            return back()->with("error-alert", "لطفا دوباره تلاش کنید");
+        }
+    }
+
+    /**
+     * store a new image for the current service.
+     */
+    public function addImage()
+    {
+        // Validate only the "image" input field
+        $this->validateOnly("image");
+
+        // Check service authentication
+        if ($this->serviceAuthentication($this->editService->id)) {
+            // Check if an image file was uploaded
+            if ($this->image) {
+                $image = $this->image;
+                $imageName = time() . '.' . $image->extension();
+                $imageSize = $image->getSize();
+                $imageType = $image->extension();
+                $imagePath = public_path($this->image_path . $imageName);
+
+                // Save the uploaded image to the specified path
+                Image::make($image->getRealPath())->save($imagePath);
+
+                // Update the image property with the stored image path
+                $this->image = $this->image_path . $imageName;
+            } else {
+                // Close images modal and return with error alert if no image was selected
+                $this->dispatch("close-images-modal");
+                return back()->with("error-alert", "لطفا دوباره تلاش کنید");
+            }
+
+            // Create a new record for the uploaded image in the database
+            ServiceImage::create([
+                "service_id" => $this->editService->id,
+                "image_path" => $this->image,
+                "image_size" => $imageSize,
+                "image_type" => $imageType,
+            ]);
+
+            // Reset the "image" property after successful upload
+            $this->reset("image");
+
+            // Return back with success message
+            return back()->with("upload-success", "عکس جدید شما با موفقیت ثبت شد و بعد از تایید ادمین نمایش داده میشود");
+        } else {
+            // Close images modal and return with error alert if authentication fails
+            $this->dispatch("close-images-modal");
+            return back()->with("error-alert", "لطفا دوباره تلاش کنید");
+        }
+    }
+
+    /**
+     * Delete a specific image associated with a service.
+     */
+    public function deleteImage($imageId)
+    {
+        // Find the image record by ID
+        $image = ServiceImage::find($imageId);
+
+        // Check service authentication
+        if ($this->serviceAuthentication($image->service->id ?? null)) {
+            // Check if image path exists and delete the file from storage
+            if ($image->image_path != null && File::exists(public_path($image->image_path))) {
+                File::delete(public_path($image->image_path));
+            }
+
+            // Delete the image record from the database
+            $image->delete();
+
+            // Update the images list for the edited service
+            $this->images = $this->editService->images()->where("status", "active")->get();
+
+            // Set images to null if no active images found
+            if ($this->images->count() <= 0) {
+                $this->images = null;
+            }
+
+            // Return back with success message after image deletion
+            return back()->with("upload-success", "عکس مورد نظر با موفقیت حذف شد");
+        } else {
+            // Close images modal and return with error alert if authentication fails
+            $this->dispatch("close-images-modal");
             return back()->with("error-alert", "لطفا دوباره تلاش کنید");
         }
     }

@@ -83,6 +83,12 @@
                                     </button>
                                 </li>
                                 <li>
+                                    <button wire:click="setImages({{ $service->id }})"
+                                        class="tagBtn block w-full py-1.5 text-sm font-medium text-center text-white bg-green-700 my-1 rounded-sm hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                        عکس ها
+                                    </button>
+                                </li>
+                                <li>
                                     <button wire:loading.remove type="button" wire:click="delete({{ $service->id }})"
                                         wire:confirm="آیا از حذف کردن این سرویس مطمعنید ؟ "
                                         class="block w-full py-1.5 text-sm font-medium text-center text-white bg-red-700 rounded-b-lg rounded-t-sm hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
@@ -335,6 +341,81 @@
                     <button type="submit" id="editTags"
                         class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                         ویرایش تگ ها
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- images modal -->
+    <div x-cloak x-data="{ show: false }" x-show="show" x-on:open-images-modal.window="show = true"
+        x-on:close-images-modal.window="show = false" x-transition tabindex="-1" aria-hidden="true"
+        class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full flex">
+        <div class="relative p-4 w-full max-w-md max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <!-- Modal header -->
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                        عکس های سرویس : {{ $editService->title ?? '-' }}
+                    </h3>
+                    <button id="tag-modal-close-btn" x-on:click="show = false" type="button"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <form wire:submit="addImage" class="p-4 md:p-5">
+                    <div class="mb-4">
+                        <div>
+                            <label for="image"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                عکس جدید خود را انتخاب کنید <span class="text-red-700 font-bold">*</span>
+                            </label>
+                            <input type="file" wire:model="image" id="image"
+                                accept="image/jpg , image/jpeg, image/png"
+                                class="font-sans bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            @error('image')
+                                <small class="text-red-700 font-bold">{{ $message }}</small>
+                            @enderror
+                            @if (session('upload-success'))
+                                <small class="text-green-700 font-bold">{{ session('upload-success') }}</small>
+                            @endif
+                        </div>
+                        @if ($images)
+                            <div class="border-t-2 border-zinc-300 mt-5 pt-3">
+                                <small class="border-b-2 border-red-500">عکس های سرویس شما :</small>
+                                <div class="mt-2 flex flex-wrap">
+                                    @foreach ($images as $singleImage)
+                                        <div class="bg-green-500 p-1 rounded-lg mx-0.5 my-0.5">
+                                            <a href="{{ asset($singleImage->image_path) }}" target="_blank">
+                                                <img src="{{ asset($singleImage->image_path) }}" alt=""
+                                                    class="w-20 h-20">
+                                            </a>
+                                            <button type="button" wire:click="deleteImage({{ $singleImage->id }})"
+                                                class="w-full flex bg-red-700 text-zinc-300 rounded-md justify-around px-1 py-0.5 mt-1 hover:bg-red-800 transition-all shadow-lg">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                    class="w-4 h-4">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                                </svg>
+                                                <small>حذف</small>
+                                            </button>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                    <button type="submit" id="editTags"
+                        class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        ثبت عکس
                     </button>
                 </form>
             </div>
