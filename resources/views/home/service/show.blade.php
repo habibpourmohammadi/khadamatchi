@@ -65,7 +65,7 @@
                     </div>
                     <div class="py-3 px-2">
                         @foreach ($activeTags as $tag)
-                            <a href=""
+                            <a href="{{ route('home.services.tags', ['search' => $tag->slug]) }}"
                                 class="bg-gray-200 transition-all hover:bg-gray-300 text-gray-800 text-xs me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">
                                 #{{ $tag->slug }}
                             </a>

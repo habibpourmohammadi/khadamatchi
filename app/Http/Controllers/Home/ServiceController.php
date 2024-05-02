@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Home;
 
 use App\Http\Controllers\Controller;
 use App\Models\Service;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
@@ -28,5 +29,13 @@ class ServiceController extends Controller
 
         // Render the service show view with the service data
         return view("home.service.show", compact("service"));
+    }
+
+    /**
+     * Display a page listing services associated with a specific tag.
+     */
+    public function tags()
+    {
+        return view("home.service.tags");
     }
 }

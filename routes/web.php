@@ -62,6 +62,7 @@ Route::get("/faq", [HomeHomeController::class, "faqPage"])->name("home.faqPage.p
 Route::controller(HomeServiceController::class)->prefix("services")->group(function () {
     Route::get("/", "index")->name("home.services.index");
     Route::get("/show/{service:slug}", "show")->name("home.services.show");
+    Route::get("/tags", "tags")->name("home.services.tags");
 });
 
 // ------------------------ Admin ------------------------
