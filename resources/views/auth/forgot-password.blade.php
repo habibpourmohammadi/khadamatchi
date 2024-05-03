@@ -9,20 +9,20 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('home-assets/icon/logo-red.png') }}">
     <link rel="stylesheet" href="{{ asset('home-assets/css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('admin-assets/sweetalert/css/sweetalert2.css') }}">
-    <title>خدمات چی | ورود به حساب کاربری</title>
+    <title>خدمات چی | بازنشانی کلمه عبور</title>
 </head>
 
 <body dir="rtl">
     <main class="h-screen flex items-center justify-center">
         <div class="w-full">
-            <div class="text-center mb-8 md:mb-10">
+            <div class="text-center mb-5 md:mb-8">
                 <h1 class="text-xl md:text-2xl">
                     <span class="border-b-2 border-blue-700">
-                        ورود به حساب کاربری
+                        بازنشانی کلمه عبور
                     </span>
                 </h1>
             </div>
-            <form action="{{ route('home.login') }}" method="POST"
+            <form action="{{ route('home.forgot-password') }}" method="POST"
                 class="max-w-sm mx-auto bg-gray-50 shadow-md px-3 py-5 rounded-lg">
                 @csrf
                 <div class="mb-5">
@@ -36,36 +36,9 @@
                         <small class="text-red-600 ms-1 font-bold">{{ $message }}</small>
                     @enderror
                 </div>
-                <div class="mb-5">
-                    <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                        کلمه عبور خود را وارد کنید :
-                    </label>
-                    <input dir="ltr" type="password" id="password" name="password"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        required />
-                    @error('password')
-                        <small class="text-red-600 ms-1 font-bold">{{ $message }}</small>
-                    @enderror
-                </div>
-                <div class="flex flex-col items-start mb-5">
-                    <span class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                        حساب کاربری ندارید؟
-                        <a href="{{ route('home.register.page') }}"
-                            class="text-decoration-none text-blue-700 font-bold hover:underline">
-                            ثبت نام در وبسایت
-                        </a>
-                    </span>
-                    <span class="ms-2 mt-1.5 text-sm font-medium text-gray-900 dark:text-gray-300">
-                        کلمه عبور خود را فراموش کرده اید ؟
-                        <a href="{{ route('home.forgot-password.page') }}"
-                            class="text-decoration-none text-blue-700 font-bold hover:underline">
-                            بازنشانی کلمه عبور
-                        </a>
-                    </span>
-                </div>
                 <button type="submit"
                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                    ورود به حساب کاربری
+                    ارسال ایمیل بازنشانی
                 </button>
             </form>
         </div>

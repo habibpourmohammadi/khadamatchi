@@ -39,6 +39,10 @@ Route::get("login", [AuthController::class, "loginPage"])->name("home.login.page
 Route::post("login", [AuthController::class, "login"])->name("home.login")->middleware("guest");
 Route::get("register", [AuthController::class, "registerPage"])->name("home.register.page")->middleware("guest");
 Route::post("register", [AuthController::class, "register"])->name("home.register")->middleware("guest");
+Route::get("forgot-password", [AuthController::class, "forgotPasswordPage"])->name("home.forgot-password.page")->middleware("guest");
+Route::post("forgot-password", [AuthController::class, "forgotPassword"])->name("home.forgot-password")->middleware("guest");
+Route::get("reset-password/{token}", [AuthController::class, "resetPasswordPage"])->name("password.reset")->middleware("guest");
+Route::post("reset-password/{token}", [AuthController::class, "resetPassword"])->name("password.reset.action")->middleware("guest");
 Route::post("logout", [AuthController::class, "logout"])->name("home.logout")->middleware("auth");
 Route::get("logout", [AuthController::class, "logout"])->middleware("auth");
 

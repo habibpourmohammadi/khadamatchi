@@ -4,12 +4,19 @@ namespace App\Http\Controllers\Home;
 
 use App\Models\City;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use GuzzleHttp\RetryMiddleware;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Requests\Auth\RegisterRequest;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\Auth\LoginRequest;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
+use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Requests\Auth\ResetPasswordRequest;
+use App\Notifications\ResetPasswordNotification;
+use App\Http\Requests\Auth\ForgotPasswordRequest;
 
 class AuthController extends Controller
 {
@@ -101,5 +108,89 @@ class AuthController extends Controller
 
         // Redirect to the login page
         return to_route("home.login.page");
+    }
+
+    /**
+     * Display the forgot password page.
+     */
+    public function forgotPasswordPage()
+    {
+        return view("auth.forgot-password");
+    }
+
+    public function forgotPassword(ForgotPasswordRequest $request)
+    {
+        // Find user by email
+        $user = User::where("email", $request->email)->first();
+
+        // If user not found, simulate delay and return success message
+        if (!$user) {
+            sleep(3); // Simulate delay for security purposes
+
+            return back()->with("swal-success", "ایمیل بازنشانی کلمه عبور با موفقیت ارسال شد !");
+        }
+
+        try {
+            // Send password reset link and notify user
+            $response = Password::sendResetLink(
+                ["email" => $user->email],
+                function ($user, $token) {
+                    $user->notify(new ResetPasswordNotification($token, $user->email));
+                }
+            );
+        } catch (\Throwable $th) {
+            // Handle exception and return error message
+            return back()->with("swal-error", "لطفا مجدد تلاش کنید !");
+        }
+
+        // Check response from password reset link sending
+        if ($response != Password::RESET_LINK_SENT) {
+            // If response indicates failure, return with input and error messages
+            return back()->withInput()->withErrors(['email' => __($response)]);
+        } else {
+            // If successful, return with success message
+            return back()->with("swal-success", "ایمیل بازنشانی کلمه عبور با موفقیت ارسال شد !");
+        }
+    }
+
+    /**
+     * Display the reset password page.
+     */
+    public function resetPasswordPage($token)
+    {
+        return view("auth.reset-password", compact("token"));
+    }
+
+    /**
+     * Reset the user's password.
+     */
+    public function resetPassword(ResetPasswordRequest $request, $token)
+    {
+        // Attempt to reset the password using the provided token and user credentials
+        $response = Password::reset(
+            [
+                "email" => $request->email,
+                "password" => $request->password,
+                "password_confirmation" => $request->password,
+                "token" => $token,
+            ],
+            function ($user) use ($request) {
+                $user->forceFill([
+                    'password' => Hash::make($request->password),
+                    'remember_token' => Str::random(60),
+                ])->save();
+
+                event(new PasswordReset($user));
+            }
+        );
+
+        // Check the response from the password reset attempt
+        if ($response != Password::PASSWORD_RESET) {
+            // If reset fails, return back with input and error messages
+            return back()->withInput()->withErrors(['email' => __($response)]);
+        } else {
+            // If reset is successful, redirect to login page with success message
+            return to_route("home.login.page")->with("swal-success", "کلمه عبور شما با موفقیت ویرایش شد !");
+        }
     }
 }
