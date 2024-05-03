@@ -5,7 +5,9 @@
 @section('content')
     <div class="card my-5 mx-4">
         @if (\File::exists(public_path($service->service_image_path)))
-            <img src="{{ asset($service->service_image_path) }}" class="card-img-top" alt="عکس پیدا نشد">
+            <a href="{{ asset($service->service_image_path) }}" class="w-25 m-auto" target="_blank">
+                <img src="{{ asset($service->service_image_path) }}" class="card-img-top" alt="عکس پیدا نشد">
+            </a>
         @endif
         <div class="card-body">
             <h5 class="card-title">عنوان : {{ $service->title }}</h5>
