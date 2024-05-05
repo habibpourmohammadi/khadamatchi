@@ -8,11 +8,10 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\File;
-use Intervention\Image\Facades\Image;
 use App\Http\Services\Message\MessageService;
 use App\Http\Services\Message\Email\EmailService;
 use App\Http\Requests\Home\MyProfile\UpdateRequest;
+use App\Services\Image\ImageService;
 
 class MyProfileController extends Controller
 {
@@ -33,7 +32,7 @@ class MyProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function myProfileUpdate(UpdateRequest $request)
+    public function myProfileUpdate(UpdateRequest $request, ImageService $imageService)
     {
         // Validate the request and retrieve validated data
         $inputs = $request->validated();
@@ -58,17 +57,17 @@ class MyProfileController extends Controller
 
         // If a new profile picture is uploaded, update the profile path
         if ($request->hasFile("profile_path")) {
-            // Delete the existing profile picture file if it exists
-            if (File::exists(public_path($user->profile_path)) && $user->profile_path != null) {
-                File::delete(public_path($user->profile_path));
-            }
+            // Delete the existing profile image from storage using ImageService
+            $imageService->deleteFromStorage($user->profile_path);
 
-            // Upload the new profile picture and update the profile path
+            // Retrieve the uploaded profile image file from the request
             $profile = $request->file("profile_path");
-            $profileName = time() . '.' . $profile->extension();
-            $profilePath = public_path($this->profile_path . $profileName);
-            Image::make($profile->getRealPath())->save($profilePath);
-            $inputs["profile_path"] = $this->profile_path . $profileName;
+
+            // Save the uploaded profile image using ImageService and obtain the saved image path
+            $profile = $imageService->save($profile, $this->profile_path);
+
+            // Update the input array with the new profile image path
+            $inputs["profile_path"] = $profile;
         }
 
         // Update the user's profile information

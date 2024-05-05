@@ -9,11 +9,10 @@ use App\Models\Category;
 use App\Models\Province;
 use App\Models\ServiceImage;
 use App\Models\Tag;
+use App\Services\Image\ImageService;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\File;
-use Intervention\Image\Facades\Image;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 
 class MyServices extends Component
@@ -97,7 +96,7 @@ class MyServices extends Component
     /**
      * Handles the update of an existing service.
      */
-    public function updateService()
+    public function updateService(ImageService $imageService)
     {
         // Validate input data
         $this->validateOnly(
@@ -115,17 +114,18 @@ class MyServices extends Component
                     $this->dispatch("close-modal");
                     return back()->with("error-alert", "لطفا دوباره تلاش کنید");
                 }
-                // Delete existing service image if it exists
-                if ($this->editService->service_image_path != null && File::exists(public_path($this->editService->service_image_path))) {
-                    File::delete(public_path($this->editService->service_image_path));
-                }
 
-                //  Upload new service image
+                // Delete the existing service image from storage using ImageService
+                $imageService->deleteFromStorage($this->editService->service_image_path);
+
+                // Retrieve the service image from the editServiceImage property
                 $image = $this->editServiceImage;
-                $imageName = time() . '.' . $image->extension();
-                $imagePath = public_path($this->image_path . $imageName);
-                Image::make($image->getRealPath())->save($imagePath);
-                $this->editServiceImage = $this->image_path . $imageName;
+
+                // Save the retrieved service image using ImageService with custom resizing options (556x556 with aspect ratio)
+                $image = $imageService->save($image, $this->image_path, null, null, [556, 556, true]);
+
+                // Update the editServiceImage property with the newly saved image path
+                $this->editServiceImage = $image;
             } else {
                 $this->editServiceImage = $this->editService->service_image_path;
             }
@@ -301,7 +301,7 @@ class MyServices extends Component
     /**
      * store a new image for the current service.
      */
-    public function addImage()
+    public function addImage(ImageService $imageService)
     {
         // Validate only the "image" input field
         $this->validateOnly("image");
@@ -310,17 +310,20 @@ class MyServices extends Component
         if ($this->serviceAuthentication($this->editService->id)) {
             // Check if an image file was uploaded
             if ($this->image) {
+                // Retrieve the uploaded image from the $this->image property
                 $image = $this->image;
-                $imageName = time() . '.' . $image->extension();
+
+                // Get the size of the image
                 $imageSize = $image->getSize();
+
+                // Get the format of the image
                 $imageType = $image->extension();
-                $imagePath = public_path($this->image_path . $imageName);
 
-                // Save the uploaded image to the specified path
-                Image::make($image->getRealPath())->save($imagePath);
+                // Save the image using ImageService and update the $image variable with the new image path
+                $image = $imageService->save($image, $this->image_path);
 
-                // Update the image property with the stored image path
-                $this->image = $this->image_path . $imageName;
+                // Update the $this->image property with the new image path
+                $this->image = $image;
             } else {
                 // Close images modal and return with error alert if no image was selected
                 $this->dispatch("close-images-modal");
@@ -350,17 +353,15 @@ class MyServices extends Component
     /**
      * Delete a specific image associated with a service.
      */
-    public function deleteImage($imageId)
+    public function deleteImage($imageId, ImageService $imageService)
     {
         // Find the image record by ID
         $image = ServiceImage::find($imageId);
 
         // Check service authentication
         if ($this->serviceAuthentication($image->service->id ?? null)) {
-            // Check if image path exists and delete the file from storage
-            if ($image->image_path != null && File::exists(public_path($image->image_path))) {
-                File::delete(public_path($image->image_path));
-            }
+            // delete the image from storage
+            $imageService->deleteFromStorage($image->image_path);
 
             // Delete the image record from the database
             $image->delete();

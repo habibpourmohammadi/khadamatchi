@@ -39,7 +39,7 @@
                         <td>
                             @if (\File::exists(public_path($image->image_path)))
                                 <a href="{{ asset($image->image_path) }}" target="_blank">
-                                    <img src="{{ asset($image->image_path) }}" alt="عکس پیدا نشد">
+                                    <img src="{{ asset($image->image_path) }}" alt="عکس پیدا نشد" width="50">
                                 </a>
                             @else
                                 <span class="text-danger fw-bold">عکس پیدا نشد</span>

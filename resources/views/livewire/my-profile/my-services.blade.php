@@ -10,7 +10,7 @@
                 <div class="max-w-56 max-h-56 m-auto">
                     @if ($service->service_image_path)
                         <a href="{{ route('home.services.show', $service) }}">
-                            <img class="rounded-t-lg" src="{{ asset($service->service_image_path) }}" alt="" />
+                            <img class="rounded-t-lg h-56  m-auto" src="{{ asset($service->service_image_path) }}" alt="" />
                         </a>
                     @else
                         <span class="block text-center text-red-700 font-bold bg-gray-100 py-2 rounded-lg">

@@ -12,7 +12,7 @@
                 class="max-w-sm mx-2 my-2 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <div class="max-w-56 max-h-56 m-auto">
                     <a href="{{ route('home.services.show', $service) }}">
-                        <img class="rounded-t-lg" src="{{ asset($service->service_image_path) }}" alt="" />
+                        <img class="rounded-t-lg h-56 m-auto" src="{{ asset($service->service_image_path) }}" alt="" />
                     </a>
                 </div>
                 <div class="p-5">
