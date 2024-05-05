@@ -88,17 +88,21 @@ class ImageService
      * @param string $imagePath The path to the image in storage.
      * @return bool True if image was successfully deleted, false otherwise.
      */
-    public function deleteFromStorage(string $imagePath)
+    public function deleteFromStorage(?string $imagePath = null)
     {
-        // Convert the image path format for deletion from storage
-        $imagePath = str_replace('storage', 'public', $imagePath);
+        if ($imagePath) {
+            // Convert the image path format for deletion from storage
+            $imagePath = str_replace('storage', 'public', $imagePath);
 
-        // Check if the image file exists and delete it from storage
-        if (Storage::exists($imagePath)) {
-            Storage::delete($imagePath);
-            return true; // Image deletion successful
+            // Check if the image file exists and delete it from storage
+            if (Storage::exists($imagePath)) {
+                Storage::delete($imagePath);
+                return true; // Image deletion successful
+            }
+
+            return false; // Image not found or deletion failed
+        } else {
+            return false;
         }
-
-        return false; // Image not found or deletion failed
     }
 }

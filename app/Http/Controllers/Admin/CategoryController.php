@@ -3,13 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Category;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\File;
-use Intervention\Image\Facades\Image;
 use App\Http\Requests\Admin\Category\StoreRequest;
 use App\Http\Requests\Admin\Category\UpdateRequest;
+use App\Services\Image\ImageService;
 
 class CategoryController extends Controller
 {
@@ -42,16 +40,20 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request, ImageService $imageService)
     {
         $image_path = null;
 
+        // Check if the request contains a file with the field name "image_path"
         if ($request->hasFile("image_path")) {
+            // Retrieve the uploaded file from the request
             $image = $request->file("image_path");
-            $imageName = time() . '.' . $image->extension();
-            $imagePath = public_path($this->path . $imageName);
-            Image::make($image->getRealPath())->save($imagePath);
-            $image_path = $this->path . $imageName;
+
+            // Save the uploaded image using the $imageService and store the returned image path
+            $image = $imageService->save($image, $this->path);
+
+            // Assign the saved image path to the variable $image_path
+            $image_path = $image;
         }
 
         Category::create([
@@ -74,20 +76,23 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, Category $category)
+    public function update(UpdateRequest $request, Category $category, ImageService $imageService)
     {
         $image_path = $category->image_path;
 
+        // Check if the request contains a file with the field name "image_path"
         if ($request->hasFile("image_path")) {
-            if (File::exists(public_path($category->image_path))) {
-                File::delete(public_path($category->image_path));
-            }
+            // Delete the previous image associated with the category from storage
+            $imageService->deleteFromStorage($category->image_path);
 
+            // Retrieve the uploaded file from the request
             $image = $request->file("image_path");
-            $imageName = time() . '.' . $image->extension();
-            $imagePath = public_path($this->path . $imageName);
-            Image::make($image->getRealPath())->save($imagePath);
-            $image_path = $this->path . $imageName;
+
+            // Save the newly uploaded image using the $imageService and store the returned image path
+            $image = $imageService->save($image, $this->path);
+
+            // Assign the saved image path to the variable $image_path
+            $image_path = $image;
         }
 
         $category->update([
@@ -119,9 +124,10 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category)
+    public function destroy(Category $category, ImageService $imageService)
     {
-        DB::transaction(function () use ($category) {
+        DB::transaction(function () use ($category, $imageService) {
+            // Retrieve the image path associated with the category
             $image_path = $category->image_path;
 
             $category->update([
@@ -130,9 +136,8 @@ class CategoryController extends Controller
 
             $category->delete();
 
-            if (File::exists(public_path($image_path))) {
-                File::delete(public_path($image_path));
-            }
+            // Delete the associated image from storage using the ImageService
+            $imageService->deleteFromStorage($image_path);
         });
 
         return back()->with("swal-success", "دسته بندی مورد نظر با موفقیت حذف شد");

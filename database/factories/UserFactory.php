@@ -2,9 +2,10 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
+use App\Models\City;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -23,13 +24,34 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        // Get a random city from the database
+        $city = City::inRandomOrder()->first();
+
+        // Determine a random gender ('male' or 'female')
+        $gender = $this->getRandomGender();
+
         return [
-            'name' => fake()->name(),
+            'first_name' => fake()->firstName($gender),
+            'last_name' => fake()->lastName(),
+            'mobile' => fake()->unique()->phoneNumber(),
             'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
+            'city_id' => $city->id,
+            'province_id' => $city->province_id,
+            'account_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
+            "gender" => $gender,
         ];
+    }
+
+    /**
+     * Get a random gender ('male' or 'female').
+     */
+    function getRandomGender(): string
+    {
+        $genders = ['male', 'female'];
+        $randomIndex = array_rand($genders);
+
+        return $genders[$randomIndex];
     }
 
     /**

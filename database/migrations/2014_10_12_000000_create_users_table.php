@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text("profile_path")->nullable();
             $table->string('mobile')->unique()->nullable();
             $table->string('email')->unique();
-            $table->enum("gender", ["male", "female", "none"])->nullable();
+            $table->enum("gender", ["male", "female", "none"])->default("none");
             $table->enum("status", ["active", "ban"])->default("active");
             $table->timestamp("account_verified_at")->nullable();
             $table->timestamps();
