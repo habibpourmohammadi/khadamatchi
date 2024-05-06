@@ -146,6 +146,7 @@ Route::middleware(["admin", "auth"])->prefix("admin")->group(function () {
     // users
     Route::controller(UserController::class)->prefix("user")->group(function () {
         Route::get("/", "index")->name("admin.user.index");
+        Route::post("/change-admin-status/{user:slug}", "changeAdminStatus")->name("admin.user.changeAdminStatus");
         Route::post("/change-status/{user:slug}", "changeStatus")->name("admin.user.changeStatus");
         Route::get("/comments/{user:slug}", "comments")->name("admin.user.comments.show");
     });

@@ -17,6 +17,11 @@
             <a href="" class="btn btn-sm btn-secondary disabled" id="commentsBtn">نظر ها</a>
         </section>
         <section>
+            <form class="d-inline" action="" method="POST" id="changeAdminStatusForm">
+                @csrf
+                <button class="btn btn-success ms-3 btn-sm disabled" type="submit" id="changeAdminStatusBtn">تغییر وضعیت
+                    ادمین بودن</button>
+            </form>
             <form class="d-inline" action="" method="POST" id="changeStatusForm">
                 @csrf
                 <button class="btn btn-warning btn-sm disabled" type="submit" id="changeStatusBtn">تغییر وضعیت</button>
@@ -38,6 +43,7 @@
                     <th>جنسیت</th>
                     <th>تعداد خدمت ها</th>
                     <th>تعداد نظر ها</th>
+                    <th>ادمین</th>
                     <th>وضعیت</th>
                     <th>تاریخ تایید اکانت</th>
                     <th>
@@ -78,6 +84,12 @@
                         <td>{{ $user->services->count() }} عدد</td>
                         <td>{{ $user->comments->count() }} عدد</td>
                         <th @class([
+                            'text-success' => $user->isAdmin() == true,
+                            'text-danger' => $user->isAdmin() == false,
+                        ])>
+                            {{ $user->isAdmin() ? 'بله' : 'خیر' }}
+                        </th>
+                        <th @class([
                             'text-success' => $user->status == 'active',
                             'text-danger' => $user->status == 'ban',
                         ])>{{ $user->status == 'active' ? 'فعال' : 'بن' }}
@@ -115,6 +127,7 @@
         $(document).ready(function() {
             let radioInput = $(".radioInput");
             let changeStatusUrl = "user/change-status/";
+            let changeAdminStatusUrl = "user/change-admin-status/";
             let servicesUrl = "service?search=";
             let commentsUrl = "user/comments/";
 
@@ -129,6 +142,9 @@
 
                 $("#changeStatusForm").attr("action", changeStatusUrl + user_slug);
                 $("#changeStatusBtn").removeClass("disabled");
+
+                $("#changeAdminStatusForm").attr("action", changeAdminStatusUrl + user_slug);
+                $("#changeAdminStatusBtn").removeClass("disabled");
             });
         });
     </script>

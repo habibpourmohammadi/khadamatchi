@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\ServiceComment;
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 
 class UserController extends Controller
 {
@@ -47,6 +48,26 @@ class UserController extends Controller
             ]);
 
             return back()->with("swal-success", "وضعیت کاربر مورد نظر با موفقیت به (فعال) تغییر یافت");
+        }
+    }
+
+    public function changeAdminStatus(User $user)
+    {
+        // Check if the user is currently an admin
+        if ($user->isAdmin()) {
+            // If the user is an admin, delete the admin record (revoke admin status)
+            $user->admin->delete();
+
+            // Return back with success message indicating change to regular user
+            return back()->with("swal-success", "وضعیت کاربر به (کاربر عادی) تغییر کرد");
+        } else {
+            // If the user is not an admin, create a new admin record (grant admin status)
+            Admin::create([
+                "user_id" => $user->id,
+            ]);
+
+            // Return back with success message indicating change to admin
+            return back()->with("swal-success", "وضعیت کاربر به (ادمین) تغییر کرد");
         }
     }
 

@@ -67,20 +67,18 @@ class AdminController extends Controller
         return to_route("admin.admin.index")->with("swal-success", "ادمین جدید شما با موفقیت ایجاد شد");
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Admin $admin, User $user)
     {
+        // Check if the user associated with the admin record matches the specified user
         if ($admin->user_id != $user->id) {
+            // If the users do not match, return a 404 error (Not Found)
             abort(404);
         }
 
-        DB::transaction(function () use ($admin, $user) {
-            $admin->delete();
-            $user->delete();
-        });
+        // Delete the admin record from the database
+        $admin->delete();
 
+        // Redirect to the admin index route with a success message
         return to_route("admin.admin.index")->with("swal-success", "ادمین مورد نظر با موفقیت حذف شد");
     }
 }
