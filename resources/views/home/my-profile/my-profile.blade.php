@@ -66,10 +66,7 @@
                 </div>
                 @if (auth()->user()->account_verified_at == null)
                     <div class="col-span-4 sm:col-span-3 mt-1 pt-9 text-left">
-                        <button id="sendVerifyToken" type="button"
-                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-2 sm:px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                            تایید ایمیل
-                        </button>
+                        <x-inputs.button id="sendVerifyToken" type="button" name="تایید ایمیل" />
                     </div>
                 @endif
                 <div class="col-span-6 mt-1">
@@ -101,9 +98,7 @@
                     @enderror
                 </div>
                 <div class="col-span-12 mt-1">
-                    <button type="submit"
-                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">ویرایش
-                        اطلاعات</button>
+                    <x-inputs.button type="submit" name="ویرایش اطلاعات" />
                 </div>
             </form>
         </div>

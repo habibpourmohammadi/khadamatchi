@@ -4,10 +4,8 @@
 @endsection
 @section('content')
     <div dir="ltr" class="mt-24">
-        <a href="{{ route('home.services.index') }}"
-            class="focus:outline-none delay-75 transition-all text-white bg-red-600 hover:bg-red-700 hover:shadow-lg focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-red-900">
-            بازگشت به صفحه خدمت ها
-        </a>
+        <x-inputs.a-button href="{{ route('home.services.index') }}" name="بازگشت به صفحه خدمت ها"
+            class="focus:outline-none delay-75 transition-all text-white bg-red-600 hover:bg-red-700 hover:shadow-lg focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-red-900" />
     </div>
     <div class="py-3 mb-14 mt-5">
         <div
