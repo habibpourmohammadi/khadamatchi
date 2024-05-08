@@ -8,6 +8,7 @@ use App\Models\Bookmark;
 use Livewire\WithPagination;
 use Livewire\Attributes\Computed;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On;
 
 class MyBookmarks extends Component
 {
@@ -16,6 +17,7 @@ class MyBookmarks extends Component
     /**
      * Retrieve paginated bookmarked services for the authenticated user.
      */
+    #[On("update-services")]
     #[Computed()]
     public function services()
     {
@@ -29,31 +31,6 @@ class MyBookmarks extends Component
             ->paginate(6);
 
         return $services;
-    }
-
-    /**
-     * Toggle the bookmark status for a service by the authenticated user.
-     */
-    public function changeBookmark($serviceId)
-    {
-        try {
-            $service = Service::find($serviceId);
-
-            $bookmark = Auth::user()->bookmarks()->where("service_id", $service->id)->first();
-
-            if ($bookmark) {
-                // Remove the bookmark if it exists
-                $bookmark->delete();
-            } else {
-                // Create a new bookmark for the service
-                Bookmark::create([
-                    "user_id" => Auth::user()->id,
-                    "service_id" => $service->id,
-                ]);
-            }
-        } catch (\Throwable $th) {
-            return back()->with("error-alert", "لطفا دوباره تلاش کنید !");
-        }
     }
 
     public function render()
