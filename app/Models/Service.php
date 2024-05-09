@@ -67,6 +67,15 @@ class Service extends Model
         return $this->hasMany(ServiceImage::class);
     }
 
+    /**
+     * Retrieve active images associated with the service.
+     */
+    public function activeImages()
+    {
+        // Retrieve images associated with the service that have "active" status
+        return $this->images()->where("status", "active")->get();
+    }
+
     public function getWorkExperienceAttribute()
     {
         $unit = '';
