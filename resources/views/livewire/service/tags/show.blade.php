@@ -8,7 +8,7 @@
     </div>
     <div class="flex flex-row flex-wrap justify-center">
         @forelse ($services as $service)
-            <livewire:service.tags.service :service="$service" :key="$service->slug" />
+            <livewire:service.item :service="$service" :key="$service->slug" />
         @empty
             <div class="flex items-center justify-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 w-full"
                 role="alert">
