@@ -27,8 +27,15 @@ class ServiceController extends Controller
             abort(404);
         }
 
-        // Render the service show view with the service data
-        return view("home.service.show", compact("service"));
+        // Retrieve related active services from the same category (excluding the current service)
+        $relatedServices = Service::where("category_id", $service->category_id)
+            ->where("status", "active")
+            ->whereNotIn('id', [$service->id])
+            ->take(15)
+            ->get();
+
+        // Render the service show view with the service data and related services
+        return view("home.service.show", compact("service", "relatedServices"));
     }
 
     /**

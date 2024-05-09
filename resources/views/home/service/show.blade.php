@@ -1,6 +1,7 @@
 @extends('home.layouts.master')
 @section('head-tag')
     <title>خدمات چی | خدمت ها</title>
+    <link rel="stylesheet" href="{{ asset('home-assets/css/swiper-bundle.min.css') }}">
 @endsection
 @section('content')
     <div dir="ltr" class="mt-24">
@@ -70,7 +71,8 @@
                         @endauth
                         @guest
                             <span class="block pt-2 font-normal text-lg text-gray-700 dark:text-gray-400">
-                                شماره تماس : <a href="{{ route('home.login.page') }}" class="text-blue-700">برای دیدن شماره تماس
+                                شماره تماس : <a href="{{ route('home.login.page') }}" class="text-blue-700">برای دیدن شماره
+                                    تماس
                                     ابتدا وارد حساب خود شوید</a>
                             </span>
                         @endguest
@@ -114,6 +116,29 @@
                 </div>
             @endif
         </div>
+        @if ($relatedServices->count() > 0)
+            <div class="text-right mb-3 mt-8 md:mb-5 md:mt-10">
+                <span class="text-lg">
+                    <span class="border-b border-red-500">
+                        متخصصین مرتبط 🌠
+                    </span>
+                </span>
+            </div>
+            <div #swiperRef="" class="swiper mySwiper justify-center">
+                <div class="swiper-wrapper">
+                    @foreach ($relatedServices as $relatedService)
+                        <div class="swiper-slide max-w-sm">
+                            <livewire:service.item :service="$relatedService" />
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
         <livewire:service.show.comment :service-slug="$service->slug" />
     </div>
+@endsection
+@section('script')
+    <script src="{{ asset('home-assets/js/swiper-bundle.min.js') }}"></script>
+    <script src="{{ asset('home-assets/js/showService.js') }}"></script>
 @endsection
