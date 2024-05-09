@@ -98,10 +98,27 @@ class MyServices extends Component
      */
     public function updateService(ImageService $imageService)
     {
-        // Validate input data
-        $this->validateOnly(
-            "editTitle.editProvince.editCity.editCategory.editServiceImage.editWorkExperienceUnit.editWorkExperienceDuration.editDescription",
-        );
+        // Validate the incoming request data
+        $this->validate([
+            'editTitle' => ["required", "max:150"],
+            'editProvince' => ["required", "exists:provinces,slug"],
+            'editCity' => ["required", "exists:cities,slug"],
+            'editCategory' => ["required", "exists:categories,slug"],
+            'editServiceImage' => ["nullable", "image", "mimes:png,jpg,jpeg", "max:1024"],
+            'editWorkExperienceUnit' => ["required", "in:year,month"],
+            'editWorkExperienceDuration' => ["required", "digits_between:1,40"],
+            'editDescription' => ["required", "min:5"],
+        ], [], [
+            // Custom attribute names for validation error messages
+            "editTitle" => "عنوان تخصص",
+            "editProvince" => "استان",
+            "editCity" => "شهر",
+            "editCategory" => "دسته بندی",
+            "editServiceImage" => "عکس سرویس",
+            "editWorkExperienceUnit" => "واحد مدت تجربه کاری",
+            "editWorkExperienceDuration" => "مدت تجربه کاری",
+            "editDescription" => "توضیحات تخصص",
+        ]);
 
         // Ensure user is authorized to edit the service
         if ($this->serviceAuthentication($this->editService->id)) {
