@@ -128,7 +128,7 @@ class MyServices extends Component
                 // OR if the file size exceeds 1 MB.
                 if (!in_array($this->editServiceImage->extension(), ["png", "jpeg", "jpg"]) || $this->editServiceImage->getSize() > 1024000) {
                     // Close the modal and display an error message.
-                    $this->dispatch("close-modal");
+                    $this->dispatch("close-edit-modal");
                     return back()->with("error-alert", "لطفا دوباره تلاش کنید");
                 }
 
@@ -159,7 +159,7 @@ class MyServices extends Component
                 !isset($city) ||
                 $province->id != $city->province_id
             ) {
-                $this->dispatch("close-modal");
+                $this->dispatch("close-edit-modal");
                 return back()->with("error-alert", "لطفا دوباره تلاش کنید");
             } else {
                 // Update the service with validated data
@@ -177,12 +177,12 @@ class MyServices extends Component
                 // Resetting form input fields and closing modal after successfully editing a service
                 $this->reset("editTitle", "editCategory", "editProvince", "editCity", "editServiceImage", "editWorkExperienceUnit", "editWorkExperienceDuration", "editDescription");
 
-                $this->dispatch("close-modal");
+                $this->dispatch("close-edit-modal");
 
                 return back()->with("success-alert", "سرویس مورد نظر با موفقیت ویرایش شد");
             }
         } else {
-            $this->dispatch("close-modal");
+            $this->dispatch("close-edit-modal");
             return back()->with("error-alert", "لطفا دوباره تلاش کنید");
         }
     }
@@ -220,7 +220,7 @@ class MyServices extends Component
                 "editWorkExperienceDuration" => $this->editService->work_experience_duration,
                 "editDescription" => $this->editService->description,
             ]);
-            $this->dispatch("open-modal");
+            $this->dispatch("open-edit-modal");
         } else {
             return back()->with("error-alert", "لطفا دوباره تلاش کنید");
         }

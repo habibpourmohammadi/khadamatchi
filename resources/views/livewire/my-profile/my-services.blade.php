@@ -10,7 +10,8 @@
                 <div class="max-w-56 max-h-56 m-auto">
                     @if ($service->service_image_path)
                         <a href="{{ route('home.services.show', $service) }}">
-                            <img class="rounded-t-lg h-56  m-auto" src="{{ asset($service->service_image_path) }}" alt="" />
+                            <img class="rounded-t-lg h-56  m-auto" src="{{ asset($service->service_image_path) }}"
+                                alt="" />
                         </a>
                     @else
                         <span class="block text-center text-red-700 font-bold bg-gray-100 py-2 rounded-lg">
@@ -134,293 +135,223 @@
     </div>
 
     <!-- edit modal -->
-    <div x-cloak x-data="{ show: false }" x-show="show" x-on:open-modal.window="show = true"
-        x-on:close-modal.window="show = false" x-transition tabindex="-1" aria-hidden="true"
-        class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full flex">
-        <div class="relative p-4 w-full max-w-md max-h-full">
-            <!-- Modal content -->
-            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                <!-- Modal header -->
-                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                        ویرایش سرویس : {{ $editService->title ?? '-' }}
-                    </h3>
-                    <button x-on:click="show = false" type="button"
-                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-                    </button>
+    <x-modal name="edit">
+        <x-slot:title class="font-bold">
+            ویرایش سرویس : {{ $editService->title ?? '-' }}
+        </x-slot>
+        <form wire:submit="updateService" class="p-4 md:p-5">
+            <div class="grid gap-4 mb-4 grid-cols-2">
+                <div class="col-span-2">
+                    <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        عنوان تخصص
+                        <span class="text-red-700 font-bold">*</span>
+                    </label>
+                    <input type="text" id="title" wire:model="editTitle"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        placeholder="تعمیرات یخچال ...">
+                    @error('editTitle')
+                        <small class="text-red-700 font-bold">{{ $message }}</small>
+                    @enderror
                 </div>
-                <!-- Modal body -->
-                <form wire:submit="updateService" class="p-4 md:p-5">
-                    <div class="grid gap-4 mb-4 grid-cols-2">
-                        <div class="col-span-2">
-                            <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                عنوان تخصص
-                                <span class="text-red-700 font-bold">*</span>
-                            </label>
-                            <input type="text" id="title" wire:model="editTitle"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="تعمیرات یخچال ...">
-                            @error('editTitle')
-                                <small class="text-red-700 font-bold">{{ $message }}</small>
-                            @enderror
-                        </div>
-                        <div class="col-span-2 sm:col-span-1">
-                            <label for="province"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                استان شما
-                                <span class="text-red-700 font-bold">*</span>
-                            </label>
-                            <select id="province" wire:model="editProvince" wire:change="setCity"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                <option value="">استان را انتخاب کنید</option>
-                                @foreach ($provinces as $province)
-                                    <option wire:key="province-slug-{{ $province->slug }}"
-                                        value="{{ $province->slug }}">{{ $province->name }}</option>
-                                @endforeach
-                            </select>
-                            @error('editProvince')
-                                <small class="text-red-700 font-bold">{{ $message }}</small>
-                            @enderror
-                        </div>
-                        <div class="col-span-2 sm:col-span-1">
-                            <label for="city"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                شهر شما
-                                <span class="text-red-700 font-bold">*</span>
-                            </label>
-                            <select id="city" wire:model="editCity"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                <option value="">شهر را انتخاب کنید</option>
-                                @foreach ($cities as $city)
-                                    <option wire:key="city-slug-{{ $city->slug }}" @selected($city->slug == $editCity)
-                                        value="{{ $city->slug }}">
-                                        {{ $city->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('editCity')
-                                <small class="text-red-700 font-bold">{{ $message }}</small>
-                            @enderror
-                        </div>
-                        <div class="col-span-2 sm:col-span-1">
-                            <label for="category"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                دسته بندی تخصص شما
-                                <span class="text-red-700 font-bold">*</span>
-                            </label>
-                            <select id="category" wire:model="editCategory"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                <option value="">دسته بندی را انتخاب کنید</option>
-                                @foreach ($categories as $category)
-                                    <option wire:key="category-slug-{{ $category->slug }}"
-                                        value="{{ $category->slug }}">
-                                        {{ $category->name }}</option>
-                                @endforeach
-                            </select>
-                            @error('editCategory')
-                                <small class="text-red-700 font-bold">{{ $message }}</small>
-                            @enderror
-                        </div>
-                        <div class="col-span-2 sm:col-span-1">
-                            <label for="service_image"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                عکس سرویس شما
-                            </label>
-                            <input accept="image/png, image/jpeg, image/jpg" type="file" id="service_image"
-                                wire:model="editServiceImage"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            @error('editServiceImage')
-                                <small class="text-red-700 font-bold">{{ $message }}</small>
-                            @enderror
-                        </div>
-                        <div class="col-span-2 sm:col-span-1">
-                            <label for="workExperienceUnit"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                واحد مدت تجربه کاری
-                                <span class="text-red-700 font-bold">*</span>
-                            </label>
-                            <select wire:model.live.debounce="editWorkExperienceUnit" id="workExperienceUnit"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                <option value="">واحد مدت تجربه کاری را انتخاب کنید</option>
-                                <option value="month">ماه</option>
-                                <option value="year">سال</option>
-                            </select>
-                            @error('editWorkExperienceUnit')
-                                <small class="text-red-700 font-bold">{{ $message }}</small>
-                            @enderror
-                        </div>
-                        <div class="col-span-2 sm:col-span-1">
-                            <label for="workExperienceDuration"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                مدت تجربه کاری
-                                <span class="text-red-700 font-bold">*</span>
-                            </label>
-                            <select wire:model="editWorkExperienceDuration" id="workExperienceDuration"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                <option value="">مدت تجربه کاری را انتخاب کنید</option>
-                                @for ($i = 1; $i <= 40; $i++)
-                                    <option value="{{ $i }}">{{ $i }} @if ($editWorkExperienceUnit == 'year')
-                                            سال
-                                        @elseif ($editWorkExperienceUnit == 'month')
-                                            ماه
-                                        @endif
-                                    </option>
-                                @endfor
-                            </select>
-                            @error('editWorkExperienceDuration')
-                                <small class="text-red-700 font-bold">{{ $message }}</small>
-                            @enderror
-                        </div>
-                        <div class="col-span-2">
-                            <label for="description"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                توضیحات تخصص شما
-                                <span class="text-red-700 font-bold">*</span>
-                            </label>
-                            <textarea id="description" rows="4" wire:model="editDescription"
-                                class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
-                        </div>
-                    </div>
-                    <button type="submit"
-                        class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        ویرایش سرویس
-                    </button>
-                </form>
+                <div class="col-span-2 sm:col-span-1">
+                    <label for="province" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        استان شما
+                        <span class="text-red-700 font-bold">*</span>
+                    </label>
+                    <select id="province" wire:model="editProvince" wire:change="setCity"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        <option value="">استان را انتخاب کنید</option>
+                        @foreach ($provinces as $province)
+                            <option wire:key="province-slug-{{ $province->slug }}" value="{{ $province->slug }}">
+                                {{ $province->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('editProvince')
+                        <small class="text-red-700 font-bold">{{ $message }}</small>
+                    @enderror
+                </div>
+                <div class="col-span-2 sm:col-span-1">
+                    <label for="city" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        شهر شما
+                        <span class="text-red-700 font-bold">*</span>
+                    </label>
+                    <select id="city" wire:model="editCity"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        <option value="">شهر را انتخاب کنید</option>
+                        @foreach ($cities as $city)
+                            <option wire:key="city-slug-{{ $city->slug }}" @selected($city->slug == $editCity)
+                                value="{{ $city->slug }}">
+                                {{ $city->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('editCity')
+                        <small class="text-red-700 font-bold">{{ $message }}</small>
+                    @enderror
+                </div>
+                <div class="col-span-2 sm:col-span-1">
+                    <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        دسته بندی تخصص شما
+                        <span class="text-red-700 font-bold">*</span>
+                    </label>
+                    <select id="category" wire:model="editCategory"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        <option value="">دسته بندی را انتخاب کنید</option>
+                        @foreach ($categories as $category)
+                            <option wire:key="category-slug-{{ $category->slug }}" value="{{ $category->slug }}">
+                                {{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('editCategory')
+                        <small class="text-red-700 font-bold">{{ $message }}</small>
+                    @enderror
+                </div>
+                <div class="col-span-2 sm:col-span-1">
+                    <label for="service_image" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        عکس سرویس شما
+                    </label>
+                    <input accept="image/png, image/jpeg, image/jpg" type="file" id="service_image"
+                        wire:model="editServiceImage"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    @error('editServiceImage')
+                        <small class="text-red-700 font-bold">{{ $message }}</small>
+                    @enderror
+                </div>
+                <div class="col-span-2 sm:col-span-1">
+                    <label for="workExperienceUnit"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        واحد مدت تجربه کاری
+                        <span class="text-red-700 font-bold">*</span>
+                    </label>
+                    <select wire:model.live.debounce="editWorkExperienceUnit" id="workExperienceUnit"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        <option value="">واحد مدت تجربه کاری را انتخاب کنید</option>
+                        <option value="month">ماه</option>
+                        <option value="year">سال</option>
+                    </select>
+                    @error('editWorkExperienceUnit')
+                        <small class="text-red-700 font-bold">{{ $message }}</small>
+                    @enderror
+                </div>
+                <div class="col-span-2 sm:col-span-1">
+                    <label for="workExperienceDuration"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        مدت تجربه کاری
+                        <span class="text-red-700 font-bold">*</span>
+                    </label>
+                    <select wire:model="editWorkExperienceDuration" id="workExperienceDuration"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        <option value="">مدت تجربه کاری را انتخاب کنید</option>
+                        @for ($i = 1; $i <= 40; $i++)
+                            <option value="{{ $i }}">{{ $i }} @if ($editWorkExperienceUnit == 'year')
+                                    سال
+                                @elseif ($editWorkExperienceUnit == 'month')
+                                    ماه
+                                @endif
+                            </option>
+                        @endfor
+                    </select>
+                    @error('editWorkExperienceDuration')
+                        <small class="text-red-700 font-bold">{{ $message }}</small>
+                    @enderror
+                </div>
+                <div class="col-span-2">
+                    <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        توضیحات تخصص شما
+                        <span class="text-red-700 font-bold">*</span>
+                    </label>
+                    <textarea id="description" rows="4" wire:model="editDescription"
+                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
+                </div>
             </div>
-        </div>
-    </div>
-
+            <button type="submit"
+                class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                ویرایش سرویس
+            </button>
+        </form>
+    </x-modal>
 
     <!-- tags modal -->
-    <div x-cloak x-data="{ show: false }" x-show="show" x-on:open-tag-modal.window="show = true"
-        x-on:close-tag-modal.window="show = false" x-transition tabindex="-1" aria-hidden="true"
-        class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full flex">
-        <div class="relative p-4 w-full max-w-md max-h-full">
-            <!-- Modal content -->
-            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                <!-- Modal header -->
-                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                        تگ های سرویس : {{ $editService->title ?? '-' }}
-                    </h3>
-                    <button id="tag-modal-close-btn" x-on:click="show = false" type="button"
-                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-                    </button>
-                </div>
-                <!-- Modal body -->
-                <form wire:submit="updateTags" class="p-4 md:p-5">
-                    <div class="mb-4">
-                        <div>
-                            <label for="title"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                تگ های مورد نظر را انتخاب کنید
-                            </label>
-                            <div wire:ignore>
-                                <select multiple wire:model="finalSelectedTags" id="selectedTags"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                    @foreach ($tags as $tag)
-                                        <option wire:key="tag-slug-{{ $tag->slug }}" value="{{ $tag->slug }}">
-                                            {{ $tag->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
+    <x-modal name="tag">
+        <x-slot:title class="font-bold">
+            تگ های سرویس : {{ $editService->title ?? '-' }}
+        </x-slot>
+        <form wire:submit="updateTags" class="p-4 md:p-5">
+            <div class="mb-4">
+                <div>
+                    <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        تگ های مورد نظر را انتخاب کنید
+                    </label>
+                    <div wire:ignore>
+                        <select multiple wire:model="finalSelectedTags" id="selectedTags"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            @foreach ($tags as $tag)
+                                <option wire:key="tag-slug-{{ $tag->slug }}" value="{{ $tag->slug }}">
+                                    {{ $tag->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
-                    <button type="submit" id="editTags"
-                        class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        ویرایش تگ ها
-                    </button>
-                </form>
+                </div>
             </div>
-        </div>
-    </div>
+            <button type="submit" id="editTags"
+                class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                ویرایش تگ ها
+            </button>
+        </form>
+    </x-modal>
 
     <!-- images modal -->
-    <div x-cloak x-data="{ show: false }" x-show="show" x-on:open-images-modal.window="show = true"
-        x-on:close-images-modal.window="show = false" x-transition tabindex="-1" aria-hidden="true"
-        class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full flex">
-        <div class="relative p-4 w-full max-w-md max-h-full">
-            <!-- Modal content -->
-            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                <!-- Modal header -->
-                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                        عکس های سرویس : {{ $editService->title ?? '-' }}
-                    </h3>
-                    <button id="tag-modal-close-btn" x-on:click="show = false" type="button"
-                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-                    </button>
+    <x-modal name="images">
+        <x-slot:title class="font-bold">
+            عکس های سرویس : {{ $editService->title ?? '-' }}
+        </x-slot>
+        <form wire:submit="addImage" class="p-4 md:p-5">
+            <div class="mb-4">
+                <div>
+                    <label for="image" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        عکس جدید خود را انتخاب کنید <span class="text-red-700 font-bold">*</span>
+                    </label>
+                    <input type="file" wire:model="image" id="image"
+                        accept="image/jpg , image/jpeg, image/png"
+                        class="font-sans bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    @error('image')
+                        <small class="text-red-700 font-bold">{{ $message }}</small>
+                    @enderror
+                    @if (session('upload-success'))
+                        <small class="text-green-700 font-bold">{{ session('upload-success') }}</small>
+                    @endif
                 </div>
-                <!-- Modal body -->
-                <form wire:submit="addImage" class="p-4 md:p-5">
-                    <div class="mb-4">
-                        <div>
-                            <label for="image"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                عکس جدید خود را انتخاب کنید <span class="text-red-700 font-bold">*</span>
-                            </label>
-                            <input type="file" wire:model="image" id="image"
-                                accept="image/jpg , image/jpeg, image/png"
-                                class="font-sans bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            @error('image')
-                                <small class="text-red-700 font-bold">{{ $message }}</small>
-                            @enderror
-                            @if (session('upload-success'))
-                                <small class="text-green-700 font-bold">{{ session('upload-success') }}</small>
-                            @endif
-                        </div>
-                        @if ($images)
-                            <div class="border-t-2 border-zinc-300 mt-5 pt-3">
-                                <small class="border-b-2 border-red-500">عکس های سرویس شما :</small>
-                                <div class="mt-2 flex flex-wrap">
-                                    @foreach ($images as $singleImage)
-                                        <div class="bg-green-500 p-1 rounded-lg mx-0.5 my-0.5">
-                                            <a href="{{ asset($singleImage->image_path) }}" target="_blank">
-                                                <img src="{{ asset($singleImage->image_path) }}" alt=""
-                                                    class="w-20 h-20">
-                                            </a>
-                                            <button type="button" wire:click="deleteImage({{ $singleImage->id }})"
-                                                class="w-full flex bg-red-700 text-zinc-300 rounded-md justify-around px-1 py-0.5 mt-1 hover:bg-red-800 transition-all shadow-lg">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                    class="w-4 h-4">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                                </svg>
-                                                <small>حذف</small>
-                                            </button>
-                                        </div>
-                                    @endforeach
+                @if ($images)
+                    <div class="border-t-2 border-zinc-300 mt-5 pt-3">
+                        <small class="border-b-2 border-red-500">عکس های سرویس شما :</small>
+                        <div class="mt-2 flex flex-wrap">
+                            @foreach ($images as $singleImage)
+                                <div class="bg-green-500 p-1 rounded-lg mx-0.5 my-0.5">
+                                    <a href="{{ asset($singleImage->image_path) }}" target="_blank">
+                                        <img src="{{ asset($singleImage->image_path) }}" alt=""
+                                            class="w-20 h-20">
+                                    </a>
+                                    <button type="button" wire:click="deleteImage({{ $singleImage->id }})"
+                                        class="w-full flex bg-red-700 text-zinc-300 rounded-md justify-around px-1 py-0.5 mt-1 hover:bg-red-800 transition-all shadow-lg">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                        </svg>
+                                        <small>حذف</small>
+                                    </button>
                                 </div>
-                            </div>
-                        @endif
+                            @endforeach
+                        </div>
                     </div>
-                    <button type="submit" id="editTags"
-                        class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        ثبت عکس
-                    </button>
-                </form>
+                @endif
             </div>
-        </div>
-    </div>
+            <button type="submit" id="editTags"
+                class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                ثبت عکس
+            </button>
+        </form>
+    </x-modal>
 </div>
 @script
     <script>
