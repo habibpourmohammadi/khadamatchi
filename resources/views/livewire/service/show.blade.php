@@ -6,7 +6,7 @@
             </span>
         </span>
     </div>
-    <div class="flex flex-row flex-wrap justify-center">
+    <div class="flex flex-row flex-wrap justify-center mb-2">
         @forelse ($this->services as $service)
             <livewire:service.item :key="$service->slug" :$service />
         @empty

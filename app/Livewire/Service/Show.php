@@ -104,7 +104,7 @@ class Show extends Component
             ->where("status", "active")
             ->where("service_image_path", "!=", null)
             ->with("user", "category", "province", "city")
-            ->paginate(6);
+            ->paginate(5);
     }
 
 
